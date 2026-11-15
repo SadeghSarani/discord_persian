@@ -13,58 +13,18 @@ import { ProfileModal } from '@/components/ProfileModal';
 import { AuthModal } from '@/components/AuthModal';
 import { CreateChannelModal } from '@/components/CreateChannelModal';
 import { CreateServerModal } from '@/components/CreateServerModal';
-import AppNavigation, { NavigationTab } from '@/components/layout/AppNavigation';
 import MomentsFeed from '@/components/moments/MomentsFeed';
-import { fa } from '@/lib/i18n/fa';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<NavigationTab>('moments');
   const [servers, setServers] = useState<Server[]>(initialServers);
   const [activeServerId, setActiveServerId] = useState<string>(initialServers[0].id);
   const [activeUser, setActiveUser] = useState<User>(currentUser);
   const [allUsers, setAllUsers] = useState<User[]>(sampleUsers);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  // Check existing session on load
-  useEffect(() => {
-    async function checkCurrentSession() {
-      try {
-        const res = await fetch('/api/v1/auth/me');
-        if (res.ok) {
-          const data = await res.json();
-          if (data.user) {
-            const userObj: User = {
-              id: data.user.id,
-              name: data.user.name,
-              username: data.user.username,
-              avatarStyle: data.user.avatarStyle,
-              status: 'online',
-              customStatus: data.user.customStatus || 'آنلاین در نکسوس 🎮',
-              role: data.user.role || 'عضو رسمی',
-              roleColor: data.user.roleColor || '#8b5cf6',
-            };
-            setActiveUser(userObj);
-            setIsAuthenticated(true);
-            setAllUsers((prev) => [userObj, ...prev.filter((u) => u.id !== userObj.id)]);
-          }
-        }
-      } catch (err) {
-        console.error('Session check error:', err);
-      }
-    }
-    checkCurrentSession();
-  }, []);
-
-  // Handle Logout
-  const handleLogout = async () => {
-    try {
-      await fetch('/api/v1/auth/logout', { method: 'POST' });
-      setIsAuthenticated(false);
-      setActiveUser(currentUser);
-    } catch (err) {
-      console.error('Logout error:', err);
-    }
-  };
+  // Moments view toggle state
+  const [isMomentsOpen, setIsMomentsOpen] = useState<boolean>(false);
+  const [isMemberListOpen, setIsMemberListOpen] = useState<boolean>(true);
 
   // Active channel within active server
   const currentServer = servers.find((s) => s.id === activeServerId) || servers[0];
@@ -91,8 +51,39 @@ export default function Home() {
   const [isMuted, setIsMuted] = useState(false);
   const [isDeafened, setIsDeafened] = useState(false);
 
+  // Check existing session on load
+  useEffect(() => {
+    async function checkCurrentSession() {
+      try {
+        const res = await fetch('/api/v1/auth/me');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user) {
+            const userObj: User = {
+              id: data.user.id,
+              name: data.user.name,
+              username: data.user.username,
+              avatarStyle: data.user.avatarStyle,
+              status: 'online',
+              customStatus: data.user.customStatus || 'آنلاین در دیسکافه 🎮',
+              role: data.user.role || 'عضو رسمی',
+              roleColor: data.user.roleColor || '#5865F2',
+            };
+            setActiveUser(userObj);
+            setIsAuthenticated(true);
+            setAllUsers((prev) => [userObj, ...prev.filter((u) => u.id !== userObj.id)]);
+          }
+        }
+      } catch (err) {
+        console.error('Session check error:', err);
+      }
+    }
+    checkCurrentSession();
+  }, []);
+
   // Handle switching server
   const handleSelectServer = (serverId: string) => {
+    setIsMomentsOpen(false);
     setActiveServerId(serverId);
     const targetServer = servers.find((s) => s.id === serverId);
     if (targetServer && targetServer.categories.length > 0) {
@@ -105,6 +96,7 @@ export default function Home() {
 
   // Handle selecting a channel
   const handleSelectChannel = (channel: Channel) => {
+    setIsMomentsOpen(false);
     if (channel.type === 'voice') {
       setActiveVoiceChannel(channel);
       setActiveChannel(channel);
@@ -250,9 +242,9 @@ export default function Home() {
     }
   };
 
-  // Navigate from a Moment into active interaction
+  // Navigate from a Moment into active voice channel
   const handleEnterMoment = (moment: MomentItem) => {
-    setActiveTab('communities');
+    setIsMomentsOpen(false);
     const voiceChan = currentServer.categories
       .flatMap((c) => c.channels)
       .find((c) => c.type === 'voice');
@@ -262,122 +254,78 @@ export default function Home() {
     }
   };
 
-  const renderCommunitiesArea = () => {
-    if (activeChannel.type === 'voice') {
-      return (
-        <VoiceVideoRoom
-          channel={activeChannel}
-          currentUser={activeUser}
-          connectedUsers={allUsers}
-          isMuted={isMuted}
-          onToggleMute={() => setIsMuted(!isMuted)}
-          onDisconnect={() => {
-            setActiveVoiceChannel(null);
-            const textChan = currentServer.categories
-              .flatMap((c) => c.channels)
-              .find((c) => c.type === 'text');
-            if (textChan) setActiveChannel(textChan);
-          }}
-        />
-      );
-    }
-
-    return (
-      <ChatArea
-        channel={activeChannel}
-        messages={messagesMap[activeChannel.id] || []}
-        onSendMessage={handleSendMessage}
-        onAddReaction={handleAddReaction}
-        currentUser={activeUser}
-      />
-    );
-  };
-
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-[var(--nexus-bg)] text-[var(--nexus-text)]" dir="rtl">
-      {/* 1. NEXUS Header Navigation */}
-      <AppNavigation
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        userXp={125}
-        userLevel={2}
-        onOpenProfile={() => setIsProfileOpen(true)}
-        onOpenAuth={() => setIsAuthOpen(true)}
-        onLogout={handleLogout}
-        isLoggedIn={isAuthenticated}
-        currentUserName={activeUser.name}
-        currentUserRole={activeUser.role}
+    <div className="flex h-screen w-screen overflow-hidden bg-[#1e1f22] text-[#dbdee1] font-vazir" dir="rtl">
+      {/* 1. Discord Leftmost (RTL Rightmost) Server Sidebar Rail */}
+      <ServerSidebar
+        servers={servers}
+        activeServerId={activeServerId}
+        onSelectServer={handleSelectServer}
+        onOpenCreateModal={() => setIsCreateServerOpen(true)}
+        onOpenMoments={() => setIsMomentsOpen(true)}
+        isMomentsActive={isMomentsOpen}
       />
 
-      {/* 2. Main Content Body */}
-      <main className="flex-1 flex overflow-hidden">
-        {activeTab === 'moments' && (
+      {/* 2. Channel Sidebar (or Direct Messages when in Home) */}
+      <ChannelSidebar
+        server={currentServer}
+        activeChannelId={activeChannel.id}
+        onSelectChannel={handleSelectChannel}
+        currentUser={activeUser}
+        isMuted={isMuted}
+        isDeafened={isDeafened}
+        onToggleMute={() => setIsMuted(!isMuted)}
+        onToggleDeafen={() => setIsDeafened(!isDeafened)}
+        activeVoiceChannel={activeVoiceChannel}
+        onDisconnectVoice={() => setActiveVoiceChannel(null)}
+        onOpenCreateChannelModal={() => setIsCreateChannelOpen(true)}
+        onOpenProfile={() => setIsProfileOpen(true)}
+      />
+
+      {/* 3. Main Stage: Either Chat Area, Moments Feed, or Voice Video Room */}
+      <main className="flex-1 flex h-full min-w-0 overflow-hidden bg-[#313338]">
+        {isMomentsOpen ? (
           <MomentsFeed
             currentUserId={activeUser.id}
             onEnterMoment={handleEnterMoment}
+            onBackToChat={() => setIsMomentsOpen(false)}
+          />
+        ) : activeChannel.type === 'voice' ? (
+          <VoiceVideoRoom
+            channel={activeChannel}
+            currentUser={activeUser}
+            connectedUsers={allUsers}
+            isMuted={isMuted}
+            onToggleMute={() => setIsMuted(!isMuted)}
+            onDisconnect={() => {
+              setActiveVoiceChannel(null);
+              const textChan = currentServer.categories
+                .flatMap((c) => c.channels)
+                .find((c) => c.type === 'text');
+              if (textChan) setActiveChannel(textChan);
+            }}
+          />
+        ) : (
+          <ChatArea
+            channel={activeChannel}
+            messages={messagesMap[activeChannel.id] || []}
+            onSendMessage={handleSendMessage}
+            onAddReaction={handleAddReaction}
+            currentUser={activeUser}
+            onToggleMemberList={() => setIsMemberListOpen(!isMemberListOpen)}
           />
         )}
 
-        {activeTab === 'communities' && (
-          <div className="flex-1 flex h-full overflow-hidden">
-            {/* Server Rail */}
-            <ServerSidebar
-              servers={servers}
-              activeServerId={activeServerId}
-              onSelectServer={handleSelectServer}
-              onOpenCreateModal={() => setIsCreateServerOpen(true)}
-              onOpenAuthModal={() => setIsAuthOpen(true)}
-            />
-
-            {/* Channel Sidebar */}
-            <ChannelSidebar
-              server={currentServer}
-              activeChannelId={activeChannel.id}
-              onSelectChannel={handleSelectChannel}
-              currentUser={activeUser}
-              isMuted={isMuted}
-              isDeafened={isDeafened}
-              onToggleMute={() => setIsMuted(!isMuted)}
-              onToggleDeafen={() => setIsDeafened(!isDeafened)}
-              activeVoiceChannel={activeVoiceChannel}
-              onDisconnectVoice={() => setActiveVoiceChannel(null)}
-              onOpenCreateChannelModal={() => setIsCreateChannelOpen(true)}
-              onOpenProfile={() => setIsProfileOpen(true)}
-            />
-
-            {/* Communities Workspace */}
-            <div className="flex-1 flex h-full min-w-0">
-              {renderCommunitiesArea()}
-
-              {/* Members List */}
-              <MemberList
-                members={allUsers}
-                onSelectMember={() => setIsProfileOpen(true)}
-              />
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'discovery' && (
-          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-[var(--nexus-bg)]">
-            <div className="w-16 h-16 rounded-2xl bg-[var(--nexus-surface)] border border-[var(--nexus-border)] flex items-center justify-center text-3xl mb-4 text-[var(--nexus-accent)]">
-              🧭
-            </div>
-            <h2 className="text-lg font-black text-white mb-2">{fa.discovery.title}</h2>
-            <p className="text-xs text-[var(--nexus-text-muted)] max-w-md leading-relaxed mb-6 font-medium">
-              {fa.discovery.subtitle}
-            </p>
-            <button
-              onClick={() => setActiveTab('moments')}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[var(--nexus-primary)] to-[var(--nexus-primary-dark)] text-white text-xs font-bold shadow-[0_0_15px_rgba(139,92,246,0.35)] transition-all"
-            >
-              مشاهده دورهمی‌های فعال
-            </button>
-          </div>
+        {/* 4. Discord Right (RTL Left) Member List (when in standard chat) */}
+        {!isMomentsOpen && activeChannel.type !== 'voice' && isMemberListOpen && (
+          <MemberList
+            members={allUsers}
+            onSelectMember={() => setIsProfileOpen(true)}
+          />
         )}
       </main>
 
-      {/* Global Modals */}
+      {/* Persistent Global Modals */}
       <ProfileModal
         isOpen={isProfileOpen}
         onClose={() => setIsProfileOpen(false)}

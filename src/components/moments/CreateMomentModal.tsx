@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import { MomentCategory, MOMENT_CATEGORIES } from '@/types/moments';
-import { fa } from '@/lib/i18n/fa';
-import { X, Sparkles, Clock, Users, Flame, Plus } from 'lucide-react';
+import { X, Plus } from 'lucide-react';
 
 interface CreateMomentModalProps {
   isOpen: boolean;
@@ -14,7 +13,7 @@ interface CreateMomentModalProps {
 export default function CreateMomentModal({
   isOpen,
   onClose,
-  onCreated
+  onCreated,
 }: CreateMomentModalProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -29,7 +28,7 @@ export default function CreateMomentModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) {
-      setError(fa.moments.form.titlePlaceholder);
+      setError('عنوان دورهمی الزامی است');
       return;
     }
 
@@ -46,8 +45,8 @@ export default function CreateMomentModal({
           category,
           capacity: Number(capacity),
           durationHours: Number(durationHours),
-          creatorId: 'user_me'
-        })
+          creatorId: 'user_me',
+        }),
       });
 
       const data = await res.json();
@@ -67,89 +66,81 @@ export default function CreateMomentModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4" dir="rtl">
-      <div className="bg-[var(--nexus-sidebar)] w-full max-w-lg rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] border border-[var(--nexus-border)] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" dir="rtl">
+      <div className="bg-[#313338] w-full max-w-md rounded-[8px] shadow-2xl border border-[#232428] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="p-5 border-b border-[var(--nexus-border)] flex items-center justify-between bg-[var(--nexus-surface)]/60">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[var(--nexus-primary)] to-[var(--nexus-accent)] flex items-center justify-center text-white shadow-sm">
-              <Flame className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-base font-black text-white">{fa.moments.create}</h3>
-              <p className="text-xs text-[var(--nexus-text-muted)]">دورهمی گذرا برای بازی، گفتگو و همکاری</p>
-            </div>
-          </div>
+        <div className="p-4 border-b border-[#2b2d31] flex items-center justify-between">
+          <h3 className="text-base font-extrabold text-white">ساخت دورهمی جدید</h3>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-lg bg-[var(--nexus-surface)] hover:bg-[var(--nexus-surface-elevated)] border border-[var(--nexus-border)] flex items-center justify-center text-[var(--nexus-text-muted)] hover:text-white transition-all"
+            className="text-[#949ba4] hover:text-white transition-colors p-1"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-4 space-y-3.5">
           {error && (
-            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs font-semibold">
+            <div className="p-2.5 rounded-[4px] bg-[#f23f43]/15 text-[#f23f43] text-xs font-semibold">
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-bold text-[var(--nexus-text-muted)] mb-1.5">
-              {fa.moments.form.title} *
+            <label className="block text-xs font-bold text-[#b5bac1] uppercase tracking-wider mb-1.5">
+              عنوان دورهمی *
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder={fa.moments.form.titlePlaceholder}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--nexus-surface)] border border-[var(--nexus-border)] text-white text-xs placeholder:text-[var(--nexus-text-dim)] focus:outline-none focus:border-[var(--nexus-primary)] transition-all"
+              placeholder="مثال: کاستوم لابی دوتا ۲ یا والورانت"
+              className="w-full px-3 py-2 rounded-[4px] bg-[#1e1f22] border border-[#232428] text-white text-xs placeholder:text-[#80848e] focus:outline-none focus:border-[#5865F2]"
               required
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-[var(--nexus-text-muted)] mb-1.5">
-              {fa.moments.form.description}
+            <label className="block text-xs font-bold text-[#b5bac1] uppercase tracking-wider mb-1.5">
+              توضیحات کوتاه
             </label>
             <textarea
               rows={2}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder={fa.moments.form.descriptionPlaceholder}
-              className="w-full px-3.5 py-2 rounded-xl bg-[var(--nexus-surface)] border border-[var(--nexus-border)] text-white text-xs placeholder:text-[var(--nexus-text-dim)] focus:outline-none focus:border-[var(--nexus-primary)] transition-all resize-none"
+              placeholder="درباره لابی، رنک یا بازی توضیح بدید..."
+              className="w-full px-3 py-2 rounded-[4px] bg-[#1e1f22] border border-[#232428] text-white text-xs placeholder:text-[#80848e] focus:outline-none focus:border-[#5865F2] resize-none"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-[var(--nexus-text-muted)] mb-2">
-              {fa.moments.form.category}
+            <label className="block text-xs font-bold text-[#b5bac1] uppercase tracking-wider mb-1.5">
+              دسته‌بندی موضوعی
             </label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-1.5">
               {MOMENT_CATEGORIES.map((cat) => (
                 <button
                   key={cat.id}
                   type="button"
                   onClick={() => setCategory(cat.id)}
-                  className={`p-2.5 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                  className={`p-2 rounded-[4px] border text-xs font-bold flex items-center justify-center gap-1 transition-colors ${
                     category === cat.id
-                      ? 'bg-[var(--nexus-primary)]/15 border-[var(--nexus-primary)] text-white shadow-sm'
-                      : 'bg-[var(--nexus-surface)] border-[var(--nexus-border)] text-[var(--nexus-text-muted)] hover:text-white hover:bg-[var(--nexus-surface-elevated)]'
+                      ? 'bg-[#5865F2] border-[#5865F2] text-white'
+                      : 'bg-[#2b2d31] border-[#232428] text-[#949ba4] hover:bg-[#35373c] hover:text-[#dbdee1]'
                   }`}
                 >
                   <span>{cat.icon}</span>
-                  <span>{cat.nameFa}</span>
+                  <span className="truncate">{cat.nameFa}</span>
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 pt-1">
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-[var(--nexus-text-muted)] mb-1.5">
-                {fa.moments.form.capacity} ({capacity} نفر)
+              <label className="block text-xs font-bold text-[#b5bac1] uppercase tracking-wider mb-1.5">
+                ظرفیت ({capacity} نفر)
               </label>
               <input
                 type="range"
@@ -157,43 +148,41 @@ export default function CreateMomentModal({
                 max="25"
                 value={capacity}
                 onChange={(e) => setCapacity(Number(e.target.value))}
-                className="w-full accent-[var(--nexus-primary)] cursor-pointer"
+                className="w-full accent-[#5865F2] cursor-pointer"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[var(--nexus-text-muted)] mb-1.5">
-                {fa.moments.form.duration} ({durationHours} ساعت)
+              <label className="block text-xs font-bold text-[#b5bac1] uppercase tracking-wider mb-1.5">
+                مدت زمان
               </label>
               <select
                 value={durationHours}
                 onChange={(e) => setDurationHours(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-xl bg-[var(--nexus-surface)] border border-[var(--nexus-border)] text-white text-xs focus:outline-none focus:border-[var(--nexus-primary)]"
+                className="w-full px-2.5 py-1.5 rounded-[4px] bg-[#1e1f22] border border-[#232428] text-white text-xs focus:outline-none focus:border-[#5865F2]"
               >
                 <option value={1}>۱ ساعت</option>
                 <option value={2}>۲ ساعت</option>
                 <option value={4}>۴ ساعت</option>
                 <option value={8}>۸ ساعت</option>
-                <option value={24}>۲۴ ساعت (یک شبانه‌روز)</option>
               </select>
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-[var(--nexus-border)]">
+          <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#2b2d31]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-[var(--nexus-surface)] hover:bg-[var(--nexus-surface-elevated)] border border-[var(--nexus-border)] text-xs text-[var(--nexus-text-muted)] hover:text-white transition-all font-medium"
+              className="px-3.5 py-1.5 rounded-[4px] hover:underline text-xs text-white"
             >
-              {fa.common.actions.cancel}
+              انصراف
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-5 py-2 rounded-xl bg-gradient-to-r from-[var(--nexus-primary)] to-[var(--nexus-primary-dark)] hover:opacity-95 text-white text-xs font-bold shadow-[0_0_15px_rgba(139,92,246,0.35)] transition-all flex items-center gap-1.5 disabled:opacity-50"
+              className="px-4 py-1.5 rounded-[4px] bg-[#5865F2] hover:bg-[#4752c4] text-white text-xs font-bold transition-colors disabled:opacity-50"
             >
-              <Plus className="w-4 h-4" />
-              <span>{isSubmitting ? fa.common.status.loading : fa.common.actions.create}</span>
+              {isSubmitting ? 'در حال ایجاد...' : 'ساخت دورهمی'}
             </button>
           </div>
         </form>

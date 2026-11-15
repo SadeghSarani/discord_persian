@@ -14,8 +14,6 @@ import {
   User as UserIcon,
 } from 'lucide-react';
 import { Server, Channel, User } from '@/types/discord';
-import { GamerAvatar } from '@/components/GamerAvatar';
-import { fa } from '@/lib/i18n/fa';
 
 interface ChannelSidebarProps {
   server: Server;
@@ -53,22 +51,22 @@ export const ChannelSidebar: React.FC<ChannelSidebarProps> = ({
   };
 
   return (
-    <aside className="w-60 bg-[var(--nexus-sidebar)]/95 flex flex-col h-full select-none shrink-0 border-l border-[var(--nexus-border)] text-right" dir="rtl">
-      {/* Community Header Banner */}
-      <div className="h-14 px-4 border-b border-[var(--nexus-border)] flex items-center justify-between bg-[var(--nexus-surface)]/50 backdrop-blur-md">
-        <div className="flex items-center gap-2 truncate">
-          <span className="text-base font-extrabold text-white truncate">{server.name}</span>
-        </div>
-        <button
-          onClick={onOpenCreateChannelModal}
-          title={fa.communities.createChannel}
-          className="p-1.5 rounded-lg text-[var(--nexus-text-muted)] hover:text-white hover:bg-[var(--nexus-surface-elevated)] transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-        </button>
-      </div>
+    <aside
+      className="w-60 bg-[#2b2d31] flex flex-col h-full select-none shrink-0 text-right z-20 border-l border-[#1f2023]"
+      dir="rtl"
+    >
+      {/* 1. Discord Server Header Header Dropdown */}
+      <header
+        className="h-12 px-4 border-b border-[#1f2023] flex items-center justify-between hover:bg-[#35373c] transition-colors cursor-pointer shadow-[0_1px_2px_rgba(0,0,0,0.2)]"
+        onClick={onOpenCreateChannelModal}
+      >
+        <span className="text-sm font-extrabold text-white truncate tracking-wide">
+          {server.name}
+        </span>
+        <ChevronDown className="w-4 h-4 text-[#949ba4]" />
+      </header>
 
-      {/* Categories & Channel Tree */}
+      {/* 2. Categorized Channels Tree */}
       <div className="flex-1 overflow-y-auto px-2 py-3 space-y-4 no-scrollbar">
         {server.categories.map((category) => {
           const isCollapsed = collapsedCategories[category.id];
@@ -77,19 +75,29 @@ export const ChannelSidebar: React.FC<ChannelSidebarProps> = ({
               {/* Category Header */}
               <div
                 onClick={() => toggleCategory(category.id)}
-                className="flex items-center justify-between px-2 py-1 text-[11px] font-bold text-[var(--nexus-text-muted)] hover:text-white cursor-pointer group uppercase tracking-wider"
+                className="flex items-center justify-between px-1 py-1 text-[11px] font-bold text-[#949ba4] hover:text-[#dbdee1] cursor-pointer group uppercase tracking-wider"
               >
-                <div className="flex items-center gap-1.5 truncate">
+                <div className="flex items-center gap-1 truncate">
                   <ChevronDown
-                    className={`w-3 h-3 transition-transform duration-200 text-[var(--nexus-text-dim)] ${
+                    className={`w-3 h-3 transition-transform duration-200 text-[#949ba4] ${
                       isCollapsed ? '-rotate-90' : ''
                     }`}
                   />
                   <span className="truncate">{category.name}</span>
                 </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpenCreateChannelModal();
+                  }}
+                  className="opacity-0 group-hover:opacity-100 p-0.5 hover:text-white transition-opacity"
+                  title="ایجاد کانال"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                </button>
               </div>
 
-              {/* Channels List */}
+              {/* Channels in Category */}
               {!isCollapsed && (
                 <div className="space-y-0.5 mt-0.5">
                   {category.channels.map((channel) => {
@@ -100,24 +108,32 @@ export const ChannelSidebar: React.FC<ChannelSidebarProps> = ({
                       <button
                         key={channel.id}
                         onClick={() => onSelectChannel(channel)}
-                        className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-all group ${
+                        className={`w-full flex items-center justify-between px-2 py-1.5 rounded-[4px] text-xs font-semibold transition-colors group ${
                           isActive
-                            ? 'bg-[var(--nexus-surface-elevated)] text-white shadow-sm border border-[var(--nexus-border-glow)]'
-                            : 'text-[var(--nexus-text-muted)] hover:text-white hover:bg-[var(--nexus-surface)]'
+                            ? 'bg-[#404249] text-white'
+                            : 'text-[#949ba4] hover:bg-[#35373c] hover:text-[#dbdee1]'
                         }`}
                       >
-                        <div className="flex items-center gap-2 truncate">
+                        <div className="flex items-center gap-1.5 truncate">
                           {isVoice ? (
-                            <Volume2 className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-[var(--nexus-accent)]' : 'text-[var(--nexus-text-dim)]'}`} />
+                            <Volume2
+                              className={`w-4 h-4 shrink-0 ${
+                                isActive ? 'text-white' : 'text-[#80848e]'
+                              }`}
+                            />
                           ) : (
-                            <Hash className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-[var(--nexus-primary-light)]' : 'text-[var(--nexus-text-dim)]'}`} />
+                            <Hash
+                              className={`w-4 h-4 shrink-0 ${
+                                isActive ? 'text-white' : 'text-[#80848e]'
+                              }`}
+                            />
                           )}
                           <span className="truncate">{channel.name}</span>
                         </div>
 
                         {isVoice && (
-                          <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-[var(--nexus-surface)] text-[var(--nexus-text-dim)] group-hover:text-white">
-                            {fa.communities.channels.voice}
+                          <span className="text-[10px] text-[#80848e] group-hover:text-[#dbdee1]">
+                            صوتی
                           </span>
                         )}
                       </button>
@@ -130,66 +146,83 @@ export const ChannelSidebar: React.FC<ChannelSidebarProps> = ({
         })}
       </div>
 
-      {/* Voice Status Bar (When in voice) */}
+      {/* 3. Connected Voice Bar (when inside a voice channel) */}
       {activeVoiceChannel && (
-        <div className="p-3 bg-[var(--nexus-surface-elevated)] border-t border-[var(--nexus-border)] flex items-center justify-between">
+        <div className="px-3 py-2 bg-[#232428] border-t border-[#1f2023] flex items-center justify-between">
           <div className="flex items-center gap-2 truncate">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <Volume2 className="w-5 h-5 text-[#23a55a] animate-pulse shrink-0" />
             <div className="truncate">
-              <div className="text-[11px] font-bold text-white truncate">{activeVoiceChannel.name}</div>
-              <div className="text-[10px] text-emerald-400">{fa.common.status.connected}</div>
+              <div className="text-xs font-bold text-[#23a55a] truncate leading-tight">
+                صدا متصل شد
+              </div>
+              <div className="text-[11px] text-[#949ba4] truncate">
+                {activeVoiceChannel.name} / {server.name}
+              </div>
             </div>
           </div>
           <button
             onClick={onDisconnectVoice}
-            title={fa.communities.channels.disconnect}
-            className="p-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 transition-all"
+            title="قطع تماس"
+            className="p-1.5 rounded hover:bg-[#35373c] text-[#f23f43] transition-colors"
           >
-            <PhoneOff className="w-3.5 h-3.5" />
+            <PhoneOff className="w-4 h-4" />
           </button>
         </div>
       )}
 
-      {/* User Status Bar at Bottom */}
-      <div className="h-14 px-3 bg-[var(--nexus-surface)] border-t border-[var(--nexus-border)] flex items-center justify-between">
+      {/* 4. Discord User Bar (Bottom Controls) */}
+      <footer className="h-14 px-2 bg-[#232428] flex items-center justify-between z-10">
         <div
           onClick={onOpenProfile}
-          className="flex items-center gap-2 truncate cursor-pointer hover:bg-[var(--nexus-surface-elevated)] p-1 rounded-xl transition-all flex-1 min-w-0"
+          className="flex items-center gap-2 p-1 rounded hover:bg-[#35373c] cursor-pointer transition-colors flex-1 min-w-0"
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[var(--nexus-primary)] to-[var(--nexus-accent)] flex items-center justify-center text-xs font-black text-white shrink-0">
-            {currentUser.name.charAt(0)}
+          {/* Avatar with Status indicator */}
+          <div className="relative shrink-0">
+            <div className="w-8 h-8 rounded-full bg-[#5865F2] flex items-center justify-center text-xs font-extrabold text-white">
+              {currentUser.name.charAt(0)}
+            </div>
+            <span className="absolute -bottom-0.5 -left-0.5 w-3 h-3 rounded-full bg-[#23a55a] border-2 border-[#232428]" />
           </div>
-          <div className="truncate">
+
+          <div className="truncate leading-tight">
             <div className="text-xs font-bold text-white truncate">{currentUser.name}</div>
-            <div className="text-[10px] text-[var(--nexus-text-muted)] truncate">{currentUser.role || 'عضو'}</div>
+            <div className="text-[11px] text-[#949ba4] truncate">
+              {currentUser.status === 'online' ? 'آنلاین' : 'در دسترس'}
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-1 shrink-0">
+        {/* Audio Mute, Deafen & Settings icons */}
+        <div className="flex items-center gap-0.5 shrink-0 text-[#b5bac1]">
           <button
             onClick={onToggleMute}
-            className={`p-1.5 rounded-lg transition-colors ${
-              isMuted
-                ? 'bg-rose-500/20 text-rose-400'
-                : 'text-[var(--nexus-text-muted)] hover:text-white hover:bg-[var(--nexus-surface-elevated)]'
+            className={`p-1.5 rounded hover:bg-[#35373c] hover:text-[#dbdee1] transition-colors ${
+              isMuted ? 'text-[#f23f43]' : ''
             }`}
             title={isMuted ? 'میکروفون قطع است' : 'قطع میکروفون'}
           >
             {isMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
           </button>
+
           <button
             onClick={onToggleDeafen}
-            className={`p-1.5 rounded-lg transition-colors ${
-              isDeafened
-                ? 'bg-rose-500/20 text-rose-400'
-                : 'text-[var(--nexus-text-muted)] hover:text-white hover:bg-[var(--nexus-surface-elevated)]'
+            className={`p-1.5 rounded hover:bg-[#35373c] hover:text-[#dbdee1] transition-colors ${
+              isDeafened ? 'text-[#f23f43]' : ''
             }`}
-            title={isDeafened ? 'صدا قطع است' : 'قطع صدا'}
+            title={isDeafened ? 'بلندگو قطع است' : 'قطع صدا'}
           >
             <Headphones className="w-4 h-4" />
           </button>
+
+          <button
+            onClick={onOpenProfile}
+            className="p-1.5 rounded hover:bg-[#35373c] hover:text-[#dbdee1] transition-colors"
+            title="تنظیمات کاربر"
+          >
+            <Settings className="w-4 h-4" />
+          </button>
         </div>
-      </div>
+      </footer>
     </aside>
   );
 };

@@ -1,115 +1,103 @@
 @import "tailwindcss";
 
 /* ==========================================================
-   NEXUS MIDNIGHT SOCIAL DESIGN SYSTEM TOKENS
-   Linear + Discord + Geneva inspired dark-first aesthetic
+   AUTHENTIC DISCORD DARK THEME DESIGN SYSTEM (DISCORD IR)
+   Precision color matching directly with official Discord client
    ========================================================== */
+
 :root {
-  /* Midnight Dark Palette */
-  --nexus-bg: #0B0D14;
-  --nexus-sidebar: #10131E;
-  --nexus-surface: #151928;
-  --nexus-surface-elevated: #1B2135;
-  --nexus-surface-hover: #222A42;
-  --nexus-border: #252D42;
-  --nexus-border-subtle: rgba(255, 255, 255, 0.08);
+  /* Discord Primary Background Hierarchy */
+  --discord-bg-app: #1e1f22;          /* Primary dark background */
+  --discord-bg-server-rail: #1e1f22;   /* Server rail background */
+  --discord-bg-channels: #2b2d31;      /* Channel & side panel background */
+  --discord-bg-chat: #313338;          /* Main chat & message area background */
+  --discord-bg-user-bar: #232428;      /* Bottom user bar & controls */
+  --discord-bg-input: #383a40;         /* Chat input field */
+  --discord-bg-modifier-hover: rgba(255, 255, 255, 0.05);
+  --discord-bg-modifier-active: rgba(255, 255, 255, 0.08);
+  --discord-bg-modifier-selected: rgba(255, 255, 255, 0.1);
 
-  /* Text & Typography */
-  --nexus-text: #F4F4F6;
-  --nexus-text-secondary: #B4B9C8;
-  --nexus-text-muted: #798299;
+  /* Discord Text Hierarchy */
+  --discord-text-normal: #dbdee1;
+  --discord-text-muted: #949ba4;
+  --discord-text-header: #f2f3f5;
+  --discord-text-interactive: #b5bac1;
+  --discord-text-interactive-hover: #dbdee1;
+  --discord-text-interactive-active: #ffffff;
+  --discord-text-link: #00a8fc;
 
-  /* Brand Accents (Linear Violet + Cyan Pulse) */
-  --nexus-primary: #8B5CF6;
-  --nexus-primary-hover: #7C3AED;
-  --nexus-primary-subtle: rgba(139, 92, 246, 0.15);
-  --nexus-accent: #22D3EE;
-  --nexus-accent-subtle: rgba(34, 211, 238, 0.12);
+  /* Discord Brand & Accent Colors */
+  --discord-blurple: #5865F2;
+  --discord-blurple-hover: #4752c4;
+  --discord-green: #23a55a;
+  --discord-yellow: #f0b232;
+  --discord-red: #f23f43;
+  --discord-nitro-pink: #eb459e;
 
-  /* Status Tokens */
-  --nexus-success: #22C55E;
-  --nexus-warning: #F59E0B;
-  --nexus-danger: #EF4444;
+  /* Discord Status Colors */
+  --status-online: #23a55a;
+  --status-idle: #f0b232;
+  --status-dnd: #f23f43;
+  --status-offline: #80848e;
 
-  /* Radii */
-  --radius-xs: 6px;
-  --radius-sm: 10px;
-  --radius-md: 14px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
-  --radius-pill: 9999px;
-
-  /* Shadows & Glow */
-  --nexus-glow-primary: 0 0 24px rgba(139, 92, 246, 0.35);
-  --nexus-glow-cyan: 0 0 24px rgba(34, 211, 238, 0.3);
-  --nexus-card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+  /* Discord Borders & Dividers */
+  --discord-border: rgba(255, 255, 255, 0.06);
+  --discord-divider: #35363c;
 }
 
 @layer base {
   * {
-    font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
-    border-color: var(--nexus-border);
+    font-family: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    border-color: var(--discord-border);
   }
 
   body {
-    background-color: var(--nexus-bg);
-    color: var(--nexus-text);
+    background-color: var(--discord-bg-app);
+    color: var(--discord-text-normal);
     direction: rtl;
     text-align: right;
   }
 }
 
-/* Glassmorphism & Midnight Surfaces */
-.nexus-glass {
-  background: rgba(21, 25, 40, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--nexus-border-subtle);
-}
-
-.nexus-glass-elevated {
-  background: rgba(27, 33, 53, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: var(--nexus-card-shadow);
-}
-
-.nexus-card {
-  background: var(--nexus-surface);
-  border: 1px solid var(--nexus-border);
-  border-radius: var(--radius-md);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.nexus-card:hover {
-  background: var(--nexus-surface-hover);
-  border-color: rgba(139, 92, 246, 0.4);
-  transform: translateY(-2px);
-  box-shadow: var(--nexus-card-shadow);
-}
-
-/* Custom Scrollbar for Sleek Midnight Look */
+/* Discord Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background-color: #2b2d31;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #252D42;
-  border-radius: 999px;
+  background-color: #1a1b1e;
+  border-radius: 4px;
+  border: 2px solid #2b2d31;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3B4664;
+  background-color: #111214;
 }
 
-/* Focus Rings */
-:focus-visible {
-  outline: 2px solid var(--nexus-primary);
-  outline-offset: 2px;
+/* Discord-Style Hover Transition */
+.discord-item {
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Server Icon Tooltip & Pill Animation */
+.server-pill {
+  transition: height 0.2s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s ease;
+}
+
+/* Discord Glass & Modals */
+.discord-modal-backdrop {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.discord-modal-box {
+  background-color: #313338;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px rgba(32, 34, 37, 0.6), 0 2px 10px 0 rgba(0, 0, 0, 0.2);
 }

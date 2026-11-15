@@ -1,9 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Sparkles, User as UserIcon, Tag, Gamepad2, Check, Shield } from 'lucide-react';
+import { X, Check } from 'lucide-react';
 import { User } from '@/types/discord';
-import { fa } from '@/lib/i18n/fa';
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -39,142 +38,135 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4" dir="rtl">
-      <div className="bg-[var(--nexus-sidebar)] w-full max-w-lg rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] border border-[var(--nexus-border)] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        {/* Modal Header */}
-        <div className="p-5 border-b border-[var(--nexus-border)] flex items-center justify-between bg-[var(--nexus-surface)]/60">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[var(--nexus-primary)] to-[var(--nexus-accent)] flex items-center justify-center text-white shadow-sm">
-              <UserIcon className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-base font-black text-white">{fa.profile.title}</h3>
-              <p className="text-xs text-[var(--nexus-text-muted)]">مدیریت اطلاعات و تنظیمات کاربری</p>
-            </div>
-          </div>
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" dir="rtl">
+      <div className="bg-[#313338] w-full max-w-md rounded-[8px] shadow-2xl border border-[#232428] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        {/* Banner with Avatar Overlay */}
+        <div className="h-24 bg-[#5865F2] relative">
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-lg bg-[var(--nexus-surface)] hover:bg-[var(--nexus-surface-elevated)] border border-[var(--nexus-border)] flex items-center justify-center text-[var(--nexus-text-muted)] hover:text-white transition-all"
+            className="absolute left-3 top-3 w-7 h-7 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
-        </div>
-
-        {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          {/* Avatar Preview */}
-          <div className="flex items-center gap-4 p-4 rounded-xl bg-[var(--nexus-surface)] border border-[var(--nexus-border)]">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[var(--nexus-primary)] to-[var(--nexus-accent)] flex items-center justify-center text-xl font-black text-white shadow-md">
-              {name.charAt(0) || 'U'}
-            </div>
-            <div>
-              <div className="text-sm font-bold text-white">{name || 'نام کاربری'}</div>
-              <div className="text-xs text-[var(--nexus-accent)] font-medium">@{username || 'username'}</div>
-              <div className="text-[11px] text-[var(--nexus-text-muted)] mt-0.5">
-                {customStatus || 'آماده برای گفتگو و بازی 🎮'}
+          <div className="absolute -bottom-8 right-5">
+            <div className="relative">
+              <div className="w-18 h-18 rounded-full bg-[#1e1f22] p-1">
+                <div className="w-full h-full rounded-full bg-[#5865F2] flex items-center justify-center text-xl font-extrabold text-white">
+                  {name.charAt(0)}
+                </div>
               </div>
+              <span className="absolute bottom-1 left-1 w-4 h-4 rounded-full bg-[#23a55a] border-2 border-[#1e1f22]" />
             </div>
           </div>
+        </div>
 
-          <div className="grid grid-cols-2 gap-3">
+        {/* Profile Details Container */}
+        <div className="pt-10 px-5 pb-5">
+          <div className="mb-4">
+            <h3 className="text-base font-extrabold text-white">{name}</h3>
+            <p className="text-xs text-[#949ba4]">@{username}</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-3.5">
             <div>
-              <label className="block text-xs font-bold text-[var(--nexus-text-muted)] mb-1.5">
-                {fa.profile.displayName}
+              <label className="block text-xs font-bold text-[#b5bac1] uppercase tracking-wider mb-1.5">
+                نام نمایشی
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--nexus-surface)] border border-[var(--nexus-border)] text-white text-xs placeholder:text-[var(--nexus-text-dim)] focus:outline-none focus:border-[var(--nexus-primary)] transition-all"
+                className="w-full px-3 py-2 rounded-[4px] bg-[#1e1f22] border border-[#232428] text-white text-xs focus:outline-none focus:border-[#5865F2]"
               />
             </div>
+
             <div>
-              <label className="block text-xs font-bold text-[var(--nexus-text-muted)] mb-1.5">
-                {fa.profile.username}
+              <label className="block text-xs font-bold text-[#b5bac1] uppercase tracking-wider mb-1.5">
+                وضعیت سفارشی
               </label>
               <input
                 type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--nexus-surface)] border border-[var(--nexus-border)] text-white text-xs placeholder:text-[var(--nexus-text-dim)] focus:outline-none focus:border-[var(--nexus-primary)] transition-all font-mono"
+                value={customStatus}
+                onChange={(e) => setCustomStatus(e.target.value)}
+                placeholder="مثال: آنلاین در دیسکافه 🎮"
+                className="w-full px-3 py-2 rounded-[4px] bg-[#1e1f22] border border-[#232428] text-white text-xs placeholder:text-[#80848e] focus:outline-none focus:border-[#5865F2]"
               />
             </div>
-          </div>
 
-          <div>
-            <label className="block text-xs font-bold text-[var(--nexus-text-muted)] mb-1.5">
-              {fa.profile.statusMessage}
-            </label>
-            <input
-              type="text"
-              value={customStatus}
-              onChange={(e) => setCustomStatus(e.target.value)}
-              placeholder="مثال: در حال بازی Valorant 🎮"
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[var(--nexus-surface)] border border-[var(--nexus-border)] text-white text-xs placeholder:text-[var(--nexus-text-dim)] focus:outline-none focus:border-[var(--nexus-primary)] transition-all"
-            />
-          </div>
+            <div>
+              <label className="block text-xs font-bold text-[#b5bac1] uppercase tracking-wider mb-1.5">
+                در حال بازی
+              </label>
+              <input
+                type="text"
+                value={gameActivity}
+                onChange={(e) => setGameActivity(e.target.value)}
+                placeholder="مثال: Dota 2 یا Counter-Strike 2"
+                className="w-full px-3 py-2 rounded-[4px] bg-[#1e1f22] border border-[#232428] text-white text-xs placeholder:text-[#80848e] focus:outline-none focus:border-[#5865F2]"
+              />
+            </div>
 
-          <div>
-            <label className="block text-xs font-bold text-[var(--nexus-text-muted)] mb-1.5">
-              {fa.profile.statusOnline}
-            </label>
-            <div className="grid grid-cols-3 gap-2">
+            <div>
+              <label className="block text-xs font-bold text-[#b5bac1] uppercase tracking-wider mb-1.5">
+                وضعیت آنلاین
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setStatus('online')}
+                  className={`p-2 rounded-[4px] text-xs font-bold flex items-center justify-center gap-1.5 border transition-colors ${
+                    status === 'online'
+                      ? 'bg-[#23a55a]/20 border-[#23a55a] text-white'
+                      : 'bg-[#2b2d31] border-[#232428] text-[#949ba4]'
+                  }`}
+                >
+                  <span className="w-2 h-2 rounded-full bg-[#23a55a]" />
+                  <span>آنلاین</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStatus('idle')}
+                  className={`p-2 rounded-[4px] text-xs font-bold flex items-center justify-center gap-1.5 border transition-colors ${
+                    status === 'idle'
+                      ? 'bg-[#f0b232]/20 border-[#f0b232] text-white'
+                      : 'bg-[#2b2d31] border-[#232428] text-[#949ba4]'
+                  }`}
+                >
+                  <span className="w-2 h-2 rounded-full bg-[#f0b232]" />
+                  <span>غایب</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStatus('dnd')}
+                  className={`p-2 rounded-[4px] text-xs font-bold flex items-center justify-center gap-1.5 border transition-colors ${
+                    status === 'dnd'
+                      ? 'bg-[#f23f43]/20 border-[#f23f43] text-white'
+                      : 'bg-[#2b2d31] border-[#232428] text-[#949ba4]'
+                  }`}
+                >
+                  <span className="w-2 h-2 rounded-full bg-[#f23f43]" />
+                  <span>مزاحم نشوید</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#2b2d31]">
               <button
                 type="button"
-                onClick={() => setStatus('online')}
-                className={`p-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border transition-all ${
-                  status === 'online'
-                    ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-400'
-                    : 'bg-[var(--nexus-surface)] border-[var(--nexus-border)] text-[var(--nexus-text-muted)]'
-                }`}
+                onClick={onClose}
+                className="px-3.5 py-1.5 rounded-[4px] hover:underline text-xs text-white"
               >
-                <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                <span>{fa.profile.statusOnline}</span>
+                انصراف
               </button>
               <button
-                type="button"
-                onClick={() => setStatus('idle')}
-                className={`p-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border transition-all ${
-                  status === 'idle'
-                    ? 'bg-amber-500/15 border-amber-500/40 text-amber-400'
-                    : 'bg-[var(--nexus-surface)] border-[var(--nexus-border)] text-[var(--nexus-text-muted)]'
-                }`}
+                type="submit"
+                className="px-4 py-1.5 rounded-[4px] bg-[#5865F2] hover:bg-[#4752c4] text-white text-xs font-bold transition-colors"
               >
-                <span className="w-2 h-2 rounded-full bg-amber-400" />
-                <span>{fa.profile.statusIdle}</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setStatus('dnd')}
-                className={`p-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border transition-all ${
-                  status === 'dnd'
-                    ? 'bg-rose-500/15 border-rose-500/40 text-rose-400'
-                    : 'bg-[var(--nexus-surface)] border-[var(--nexus-border)] text-[var(--nexus-text-muted)]'
-                }`}
-              >
-                <span className="w-2 h-2 rounded-full bg-rose-400" />
-                <span>{fa.profile.statusDnd}</span>
+                ذخیره تغییرات
               </button>
             </div>
-          </div>
-
-          <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-[var(--nexus-border)]">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-[var(--nexus-surface)] hover:bg-[var(--nexus-surface-elevated)] border border-[var(--nexus-border)] text-xs text-[var(--nexus-text-muted)] hover:text-white transition-all font-medium"
-            >
-              {fa.common.actions.cancel}
-            </button>
-            <button
-              type="submit"
-              className="px-5 py-2 rounded-xl bg-gradient-to-r from-[var(--nexus-primary)] to-[var(--nexus-primary-dark)] hover:opacity-95 text-white text-xs font-bold shadow-[0_0_15px_rgba(139,92,246,0.35)] transition-all flex items-center gap-1.5"
-            >
-              <Check className="w-4 h-4" />
-              <span>{fa.common.actions.save}</span>
-            </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );
