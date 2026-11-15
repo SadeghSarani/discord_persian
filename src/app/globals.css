@@ -1,26 +1,115 @@
 @import "tailwindcss";
 
+/* ==========================================================
+   NEXUS MIDNIGHT SOCIAL DESIGN SYSTEM TOKENS
+   Linear + Discord + Geneva inspired dark-first aesthetic
+   ========================================================== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Midnight Dark Palette */
+  --nexus-bg: #0B0D14;
+  --nexus-sidebar: #10131E;
+  --nexus-surface: #151928;
+  --nexus-surface-elevated: #1B2135;
+  --nexus-surface-hover: #222A42;
+  --nexus-border: #252D42;
+  --nexus-border-subtle: rgba(255, 255, 255, 0.08);
+
+  /* Text & Typography */
+  --nexus-text: #F4F4F6;
+  --nexus-text-secondary: #B4B9C8;
+  --nexus-text-muted: #798299;
+
+  /* Brand Accents (Linear Violet + Cyan Pulse) */
+  --nexus-primary: #8B5CF6;
+  --nexus-primary-hover: #7C3AED;
+  --nexus-primary-subtle: rgba(139, 92, 246, 0.15);
+  --nexus-accent: #22D3EE;
+  --nexus-accent-subtle: rgba(34, 211, 238, 0.12);
+
+  /* Status Tokens */
+  --nexus-success: #22C55E;
+  --nexus-warning: #F59E0B;
+  --nexus-danger: #EF4444;
+
+  /* Radii */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 9999px;
+
+  /* Shadows & Glow */
+  --nexus-glow-primary: 0 0 24px rgba(139, 92, 246, 0.35);
+  --nexus-glow-cyan: 0 0 24px rgba(34, 211, 238, 0.3);
+  --nexus-card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  * {
+    font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+    border-color: var(--nexus-border);
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    background-color: var(--nexus-bg);
+    color: var(--nexus-text);
+    direction: rtl;
+    text-align: right;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Glassmorphism & Midnight Surfaces */
+.nexus-glass {
+  background: rgba(21, 25, 40, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--nexus-border-subtle);
+}
+
+.nexus-glass-elevated {
+  background: rgba(27, 33, 53, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--nexus-card-shadow);
+}
+
+.nexus-card {
+  background: var(--nexus-surface);
+  border: 1px solid var(--nexus-border);
+  border-radius: var(--radius-md);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nexus-card:hover {
+  background: var(--nexus-surface-hover);
+  border-color: rgba(139, 92, 246, 0.4);
+  transform: translateY(-2px);
+  box-shadow: var(--nexus-card-shadow);
+}
+
+/* Custom Scrollbar for Sleek Midnight Look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #252D42;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3B4664;
+}
+
+/* Focus Rings */
+:focus-visible {
+  outline: 2px solid var(--nexus-primary);
+  outline-offset: 2px;
 }

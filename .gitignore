@@ -23,6 +23,10 @@
 # misc
 .DS_Store
 *.pem
+.pgdata/
+prisma/dev.db
+*.sqlite
+*.sqlite3
 
 # debug
 npm-debug.log*
