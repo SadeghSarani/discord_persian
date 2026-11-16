@@ -18,7 +18,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
-      <body className="h-full overflow-hidden bg-[#1e1f22] text-[#dbdee1] font-vazir select-none">
+      <body className="min-h-full bg-[#1e1f22] text-[#dbdee1] font-vazir select-none">
         {children}
       </body>
     </html>
