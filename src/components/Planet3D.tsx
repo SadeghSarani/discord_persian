@@ -6,7 +6,7 @@ import * as THREE from 'three';
 interface Planet3DProps {
   id: string;
   size: number;
-  theme: 'cs2' | 'fc' | 'dota2' | 'val' | 'prime';
+  theme: 'cs2' | 'fc' | 'dota2' | 'val' | 'prime' | 'apex' | 'minecraft' | 'gta';
   hasRings?: boolean;
 }
 
@@ -184,6 +184,56 @@ export default function Planet3D({ size, theme, hasRings = false }: Planet3DProp
         sCtx.beginPath();
         sCtx.arc(x, y, Math.random() * 30 + 10, 0, Math.PI * 2);
         sCtx.fill();
+      }
+    } else if (theme === 'apex') {
+      // Storm Point / Thunder Electric World
+      const grad = sCtx.createLinearGradient(0, 0, 0, 512);
+      grad.addColorStop(0, '#0c4a6e');
+      grad.addColorStop(0.3, '#0284c7');
+      grad.addColorStop(0.5, '#38bdf8');
+      grad.addColorStop(0.7, '#0ea5e9');
+      grad.addColorStop(1, '#082f49');
+      sCtx.fillStyle = grad;
+      sCtx.fillRect(0, 0, 1024, 512);
+
+      // Electric storm vortexes
+      for (let i = 0; i < 40; i++) {
+        const x = Math.random() * 1024;
+        const y = Math.random() * 512;
+        sCtx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+        sCtx.beginPath();
+        sCtx.arc(x, y, Math.random() * 25 + 5, 0, Math.PI * 2);
+        sCtx.fill();
+      }
+    } else if (theme === 'minecraft') {
+      // Voxel Emerald / Terra World
+      sCtx.fillStyle = '#14532d';
+      sCtx.fillRect(0, 0, 1024, 512);
+
+      for (let x = 0; x < 1024; x += 32) {
+        for (let y = 0; y < 512; y += 32) {
+          const isWater = Math.random() > 0.6;
+          sCtx.fillStyle = isWater ? '#0369a1' : (Math.random() > 0.5 ? '#15803d' : '#166534');
+          sCtx.fillRect(x, y, 32, 32);
+        }
+      }
+    } else if (theme === 'gta') {
+      // Neon Metropolis Sunset
+      const grad = sCtx.createLinearGradient(0, 0, 0, 512);
+      grad.addColorStop(0, '#4c0519');
+      grad.addColorStop(0.3, '#9f1239');
+      grad.addColorStop(0.5, '#f43f5e');
+      grad.addColorStop(0.7, '#fb923c');
+      grad.addColorStop(1, '#1c1917');
+      sCtx.fillStyle = grad;
+      sCtx.fillRect(0, 0, 1024, 512);
+
+      // City light clusters
+      for (let i = 0; i < 70; i++) {
+        const x = Math.random() * 1024;
+        const y = Math.random() * 512;
+        sCtx.fillStyle = 'rgba(254, 240, 138, 0.6)';
+        sCtx.fillRect(x, y, 4, 4);
       }
     } else {
       // Nexus Prime - Massive Jupiter-style Ringed Gas Giant

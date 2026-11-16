@@ -51,7 +51,7 @@ interface PlanetWorld {
   subTitle: string;
   genre: string;
   slug: string;
-  theme: 'cs2' | 'fc' | 'dota2' | 'val' | 'prime';
+  theme: 'cs2' | 'fc' | 'dota2' | 'val' | 'prime' | 'apex' | 'minecraft' | 'gta';
   hasRings?: boolean;
   gradient: string;
   shadowColor: string;
@@ -186,6 +186,74 @@ const PLANET_WORLDS: PlanetWorld[] = [
       { id: 'val-voice', name: 'اسکوات ۵ نفره رنک ایمورتال', type: 'voice', activeCount: 5 },
     ],
     musicTrack: 'VCT Champions Tokyo Synth',
+  },
+  {
+    id: 'planet-apex',
+    name: 'سیاره اپکس لجندز (Storm Point Orbit)',
+    subTitle: 'Apex Legends Battle Royale',
+    genre: 'بتل رویال با سرعت بالا',
+    slug: 'apex',
+    theme: 'apex',
+    hasRings: true,
+    gradient: 'from-sky-600 via-cyan-500 to-blue-400',
+    shadowColor: 'rgba(14, 165, 233, 0.5)',
+    accentColor: '#0ea5e9',
+    icon: '⚡',
+    activePilots: 124,
+    openLobbies: 9,
+    description: 'اسکوادهای ۳ نفره، رنکد پردیتور و مسترز با استریم و ویس زنده.',
+    coordinates: { x: 18, y: 65 },
+    size: 125,
+    hubs: [
+      { id: 'apex-chat', name: 'لابی هماهنگی اسکواد ۳ نفره', type: 'chat', activeCount: 42 },
+      { id: 'apex-voice', name: 'ویس روم رنکد دیاموند و پردیتور', type: 'voice', activeCount: 6 },
+    ],
+    musicTrack: 'Apex Legends Main Electronic Theme',
+  },
+  {
+    id: 'planet-minecraft',
+    name: 'سیاره ماینکرفت (Voxel Universe)',
+    subTitle: 'Minecraft & Creative Sandbox',
+    genre: 'سندباکس و ساخت و ساز',
+    slug: 'minecraft',
+    theme: 'minecraft',
+    gradient: 'from-emerald-600 via-green-500 to-lime-400',
+    shadowColor: 'rgba(34, 197, 94, 0.5)',
+    accentColor: '#22c55e',
+    icon: '🟩',
+    activePilots: 210,
+    openLobbies: 15,
+    description: 'سرورهای سوروایوال ایرانی، ساخت سازه‌های عظیم و هاردکور تیمی.',
+    coordinates: { x: 82, y: 62 },
+    size: 120,
+    hubs: [
+      { id: 'mc-chat', name: 'چت عمومی ماینرها و معرفی سرور', type: 'chat', activeCount: 88 },
+      { id: 'mc-voice', name: 'ویس روم ساخت و ساز و پروژه', type: 'voice', activeCount: 12 },
+    ],
+    musicTrack: 'C418 Subwoofer Lullaby Chill',
+  },
+  {
+    id: 'planet-gta',
+    name: 'سیاره سن آندریاس (Neon Los Santos)',
+    subTitle: 'GTA Online & Roleplay',
+    genre: 'جهان‌باز و رول‌پلی شهری',
+    slug: 'gta',
+    theme: 'gta',
+    hasRings: true,
+    gradient: 'from-rose-600 via-orange-500 to-amber-400',
+    shadowColor: 'rgba(244, 63, 94, 0.5)',
+    accentColor: '#f43f5e',
+    icon: '🚗',
+    activePilots: 285,
+    openLobbies: 18,
+    description: 'سرورهای فایوم (FiveM)، رول‌پلی، هایست‌های سنگین و دورهمی شبانه.',
+    coordinates: { x: 48, y: 18 },
+    size: 130,
+    hubs: [
+      { id: 'gta-chat', name: 'تالار شهر و معاملات هایست', type: 'chat', activeCount: 110 },
+      { id: 'gta-voice', name: 'بیسیم رادیویی پلیس و اوباش', type: 'voice', activeCount: 20 },
+    ],
+    musicTrack: 'Los Santos Underground Radio Live',
   },
 ];
 
@@ -366,8 +434,18 @@ export default function GalaxyUniverseApp() {
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-bold text-cyan-300 transition-all shadow-sm"
           >
             <HelpCircle className="w-4 h-4" />
-            <span>راهنما (از کجا شروع کنم؟)</span>
+            <span>راهنما</span>
           </button>
+
+          {/* NEXUS GLYPHS Showcase link */}
+          <a
+            href="/glyphs"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#8B7CFF]/20 hover:bg-[#8B7CFF]/35 border border-[#8B7CFF]/40 text-xs font-bold text-[#b4a9ff] transition-all shadow-sm"
+            title="مشاهده سامانه نشانه‌شناسی و ۲۰ آیکون جدید نکسوس"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-[#43C9D8]" />
+            <span>ویترین آیکون‌ها (GLYPHS)</span>
+          </a>
         </div>
 
         {/* User Identity & Audio Controls */}
@@ -427,7 +505,7 @@ export default function GalaxyUniverseApp() {
             <h3 className="text-xs font-black text-white">سیارات چت و روم‌های فعال</h3>
           </div>
           <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-300 font-bold border border-purple-500/20">
-            ۵ سیاره
+            {PLANET_WORLDS.length} سیاره
           </span>
         </div>
 
