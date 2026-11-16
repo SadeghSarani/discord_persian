@@ -63,6 +63,26 @@ export const VoiceVideoRoom: React.FC<VoiceVideoRoomProps> = ({
   const [addedUsers, setAddedUsers] = useState<User[]>([]);
   const [viewerCount, setViewerCount] = useState<number>(42);
 
+  // Floating Live Reactions State
+  const [showReactionPicker, setShowReactionPicker] = useState(false);
+  const [floatingReactions, setFloatingReactions] = useState<{ id: string; emoji: string; x: number }[]>([]);
+
+  const handleSendReaction = (emoji: string) => {
+    const newReaction = {
+      id: `${Date.now()}_${Math.random()}`,
+      emoji,
+      x: 30 + Math.random() * 40, // random percentage across center stage
+    };
+    setFloatingReactions((prev) => [...prev, newReaction]);
+    setShowReactionPicker(false);
+    confetti({ particleCount: 35, spread: 60, origin: { y: 0.85, x: newReaction.x / 100 } });
+
+    // Auto remove floating reaction after animation
+    setTimeout(() => {
+      setFloatingReactions((prev) => prev.filter((r) => r.id !== newReaction.id));
+    }, 2500);
+  };
+
   // Group Mini-Game State
   const [showGameActivity, setShowGameActivity] = useState(false);
   const [board, setBoard] = useState<(string | null)[]>(Array(9).fill(null));
@@ -408,24 +428,35 @@ export const VoiceVideoRoom: React.FC<VoiceVideoRoomProps> = ({
           </div>
         )}
 
-        {/* Participant Cards Grid */}
+        {/* Participant Cards Grid (Adaptive Responsive Layout that gracefully scales from 1 to 20+ users) */}
         <div
-          className={`flex-1 overflow-y-auto no-scrollbar gap-3 ${
+          className={`flex-1 overflow-y-auto no-scrollbar gap-4 p-1 ${
             isScreenSharing
-              ? 'flex md:flex-col overflow-x-auto md:overflow-y-auto max-h-full max-w-full md:w-64 shrink-0'
-              : 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 auto-rows-fr'
+              ? 'flex md:flex-col overflow-x-auto md:overflow-y-auto max-h-full max-w-full md:w-72 shrink-0'
+              : participants.length <= 2
+              ? 'grid grid-cols-1 sm:grid-cols-2 auto-rows-fr max-h-[75vh]'
+              : participants.length <= 4
+              ? 'grid grid-cols-2 auto-rows-fr max-h-[75vh]'
+              : participants.length <= 6
+              ? 'grid grid-cols-2 sm:grid-cols-3 auto-rows-fr max-h-[75vh]'
+              : 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 auto-rows-[160px]'
           }`}
         >
           {participants.map((user) => {
             const isMe = user.id === currentUser.id;
             const isSpeaking = activeSpeaker === user.id && !isMuted;
+            const cardHeightClass = isScreenSharing
+              ? 'min-w-[150px] h-[130px] shrink-0'
+              : participants.length <= 2
+              ? 'min-h-[220px] max-h-[360px]'
+              : participants.length <= 4
+              ? 'min-h-[190px] max-h-[300px]'
+              : 'min-h-[140px] max-h-[220px]';
 
             return (
               <div
                 key={user.id}
-                className={`rounded-2xl relative overflow-hidden flex flex-col items-center justify-center border transition-all duration-300 shadow-xl backdrop-blur-xl ${
-                  isScreenSharing ? 'min-w-[140px] h-[130px] shrink-0' : 'min-h-[160px]'
-                } ${
+                className={`rounded-3xl relative overflow-hidden flex flex-col items-center justify-center border transition-all duration-300 shadow-xl backdrop-blur-xl group ${cardHeightClass} ${
                   isSpeaking
                     ? 'bg-[#1c2138] border-emerald-500 ring-2 ring-emerald-500/50 shadow-[0_0_25px_rgba(16,185,129,0.3)]'
                     : 'bg-[#141624]/90 border-white/[0.08] hover:border-white/20'
@@ -595,12 +626,41 @@ export const VoiceVideoRoom: React.FC<VoiceVideoRoomProps> = ({
         </div>
       )}
 
+      {/* Live Animated Floating Reactions Layer */}
+      <div className="absolute inset-0 pointer-events-none z-40 overflow-hidden">
+        {floatingReactions.map((r) => (
+          <div
+            key={r.id}
+            style={{ left: `${r.x}%` }}
+            className="absolute bottom-24 text-4xl animate-bounce filter drop-shadow-[0_0_15px_rgba(255,255,255,0.7)] transition-all duration-1000 transform -translate-y-36"
+          >
+            {r.emoji}
+          </div>
+        ))}
+      </div>
+
+      {/* Live Reaction Picker Popup */}
+      {showReactionPicker && (
+        <div className="absolute bottom-24 left-1/2 -translate-x-1/2 bg-[#121424]/95 backdrop-blur-2xl px-4 py-2.5 rounded-2xl border border-white/20 shadow-2xl z-50 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2 duration-150">
+          {['🔥', '❤️', '👏', '😂', '🎉', '🏆', '💎', '🚀'].map((emoji) => (
+            <button
+              key={emoji}
+              onClick={() => handleSendReaction(emoji)}
+              className="text-2xl hover:scale-130 active:scale-95 transition-transform p-1.5 rounded-xl hover:bg-white/10"
+              title={`ارسال ری‌اکشن ${emoji}`}
+            >
+              {emoji}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Floating Bottom Control Bar */}
-      <div className="h-20 bg-[#07080e]/90 backdrop-blur-2xl border-t border-white/[0.08] px-8 flex items-center justify-center space-x-5 space-x-reverse z-30 shrink-0">
+      <div className="h-20 bg-[#07080e]/95 backdrop-blur-2xl border-t border-white/[0.08] px-8 flex items-center justify-center gap-4 z-30 shrink-0">
         <button
           onClick={onToggleMute}
           className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${
-            isMuted ? 'bg-red-500 text-white' : 'bg-[#181a29] text-white hover:bg-[#25283d] border border-white/[0.1]'
+            isMuted ? 'bg-red-500 text-white shadow-lg' : 'bg-[#181a29] text-white hover:bg-[#25283d] border border-white/[0.1]'
           }`}
           title={isMuted ? 'فعال‌سازی میکروفن' : 'بی‌صدا کردن'}
         >
@@ -610,7 +670,7 @@ export const VoiceVideoRoom: React.FC<VoiceVideoRoomProps> = ({
         <button
           onClick={toggleCamera}
           className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${
-            isVideoOn ? 'bg-emerald-500 text-white' : 'bg-[#181a29] text-white hover:bg-[#25283d] border border-white/[0.1]'
+            isVideoOn ? 'bg-emerald-500 text-white shadow-lg' : 'bg-[#181a29] text-white hover:bg-[#25283d] border border-white/[0.1]'
           }`}
           title={isVideoOn ? 'خاموش کردن وبکم' : 'روشن کردن وبکم'}
         >
@@ -620,19 +680,24 @@ export const VoiceVideoRoom: React.FC<VoiceVideoRoomProps> = ({
         <button
           onClick={toggleScreenShare}
           className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${
-            isScreenSharing ? 'bg-indigo-600 text-white animate-pulse' : 'bg-[#181a29] text-white hover:bg-[#25283d] border border-white/[0.1]'
+            isScreenSharing ? 'bg-indigo-600 text-white animate-pulse shadow-lg' : 'bg-[#181a29] text-white hover:bg-[#25283d] border border-white/[0.1]'
           }`}
           title="اشتراک صفحه مانیتور"
         >
           <Monitor className="w-5 h-5" />
         </button>
 
+        {/* Reaction Popover Trigger */}
         <button
-          onClick={() => confetti({ particleCount: 150, spread: 90, origin: { y: 0.65 } })}
-          className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-orange-500 text-black font-black flex items-center justify-center shadow-lg hover:scale-105 transition"
-          title="افکت هایپ!"
+          onClick={() => setShowReactionPicker(!showReactionPicker)}
+          className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all shadow-md ${
+            showReactionPicker
+              ? 'bg-gradient-to-tr from-pink-500 to-purple-600 text-white scale-105'
+              : 'bg-[#181a29] text-amber-300 hover:bg-[#25283d] border border-white/[0.1]'
+          }`}
+          title="ری‌اکشن‌های زنده (ایموجی)"
         >
-          <Sparkles className="w-5 h-5 text-white" />
+          <Sparkles className="w-5 h-5" />
         </button>
 
         <button
