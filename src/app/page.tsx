@@ -816,15 +816,21 @@ export default function GalaxyUniverseApp() {
             <VoiceVideoRoom
               channel={{
                 id: activeCall.friend ? `call_${activeCall.friend.id}` : 'planet_voice',
-                name: activeCall.friend ? `تماس با ${activeCall.friend.name}` : activeCall.channelName || 'ویس روم',
+                name: activeCall.friend
+                  ? `استریم و تماس با ${activeCall.friend.name}`
+                  : activeCall.channelName || 'استریم زنده و استیج صوتی',
                 type: 'voice',
-                description: 'مکالمه صوتی و تصویری نکسوس',
+                description: 'استریم زنده، اشتراک تصویر و مکالمه گروهی نکسوس',
               }}
               currentUser={activeUser}
               connectedUsers={activeCall.friend ? [activeUser, activeCall.friend] : [activeUser, ...sampleUsers.slice(0, 3)]}
+              availableFriends={sampleUsers}
               isMuted={isMuted}
               onToggleMute={() => setIsMuted(!isMuted)}
               onDisconnect={() => setActiveCall(null)}
+              onAddUser={(newUser) => {
+                // Keep caller state updated with invited friends
+              }}
             />
           </div>
         </div>

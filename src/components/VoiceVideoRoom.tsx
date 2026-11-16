@@ -16,6 +16,12 @@ import {
   Radio,
   Gamepad2,
   RotateCcw,
+  Share2,
+  UserPlus,
+  Check,
+  Tv,
+  Eye,
+  Volume2,
 } from 'lucide-react';
 import { Channel, User } from '@/types/discord';
 import { GamerAvatar } from '@/components/GamerAvatar';
@@ -28,6 +34,8 @@ interface VoiceVideoRoomProps {
   isMuted: boolean;
   onToggleMute: () => void;
   onDisconnect: () => void;
+  onAddUser?: (user: User) => void;
+  availableFriends?: User[];
 }
 
 export const VoiceVideoRoom: React.FC<VoiceVideoRoomProps> = ({
@@ -37,6 +45,8 @@ export const VoiceVideoRoom: React.FC<VoiceVideoRoomProps> = ({
   isMuted,
   onToggleMute,
   onDisconnect,
+  onAddUser,
+  availableFriends = [],
 }) => {
   const [isVideoOn, setIsVideoOn] = useState(false);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
@@ -45,6 +55,13 @@ export const VoiceVideoRoom: React.FC<VoiceVideoRoomProps> = ({
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [screenStream, setScreenStream] = useState<MediaStream | null>(null);
   const [isVirtualCam, setIsVirtualCam] = useState(false);
+
+  // Invite & Stream Links State
+  const [isCopiedLink, setIsCopiedLink] = useState(false);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [streamMode, setStreamMode] = useState<'stage' | 'grid'>('grid');
+  const [addedUsers, setAddedUsers] = useState<User[]>([]);
+  const [viewerCount, setViewerCount] = useState<number>(42);
 
   // Group Mini-Game State
   const [showGameActivity, setShowGameActivity] = useState(false);
@@ -274,7 +291,28 @@ export const VoiceVideoRoom: React.FC<VoiceVideoRoomProps> = ({
     };
   }, [stream, screenStream]);
 
-  const participants = [currentUser, ...connectedUsers.filter((u) => u.id !== currentUser.id && u.status === 'online')];
+  const handleCopyStreamLink = () => {
+    const streamUrl = typeof window !== 'undefined' ? `${window.location.origin}/#stream-${channel.id}` : '';
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(streamUrl);
+    }
+    setIsCopiedLink(true);
+    confetti({ particleCount: 50, spread: 60, origin: { y: 0.2 } });
+    setTimeout(() => setIsCopiedLink(false), 2500);
+  };
+
+  const handleAddFriendToCall = (user: User) => {
+    if (!addedUsers.some((u) => u.id === user.id)) {
+      setAddedUsers((prev) => [...prev, user]);
+      if (onAddUser) onAddUser(user);
+    }
+    setIsInviteModalOpen(false);
+    confetti({ particleCount: 70, spread: 70, origin: { y: 0.3 } });
+  };
+
+  const allConnected = [...connectedUsers, ...addedUsers];
+  const uniqueUsers = Array.from(new Map(allConnected.map((u) => [u.id, u])).values());
+  const participants = [currentUser, ...uniqueUsers.filter((u) => u.id !== currentUser.id)];
 
   return (
     <div className="flex-1 bg-gradient-to-b from-[#090a12] via-[#0d0e19] to-[#07080d] flex flex-col h-full relative overflow-hidden select-none">
@@ -299,6 +337,32 @@ export const VoiceVideoRoom: React.FC<VoiceVideoRoomProps> = ({
         </div>
 
         <div className="flex items-center space-x-3 space-x-reverse text-[#b5bac1]">
+          {/* Live Viewers Indicator */}
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-bold shadow-sm">
+            <Eye className="w-3.5 h-3.5 animate-pulse" />
+            <span>{viewerCount} تماشاگر زنده</span>
+          </div>
+
+          {/* Copy Stream Link */}
+          <button
+            onClick={handleCopyStreamLink}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-xs font-bold text-cyan-300 transition-all shadow-sm"
+            title="کپی لینک مستقیم استریم یا تماس"
+          >
+            {isCopiedLink ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Share2 className="w-3.5 h-3.5" />}
+            <span>{isCopiedLink ? 'لینک کپی شد!' : 'لینک استریم'}</span>
+          </button>
+
+          {/* Add User / Invite to Call */}
+          <button
+            onClick={() => setIsInviteModalOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600/30 to-teal-600/30 hover:from-emerald-600/50 hover:to-teal-600/50 border border-emerald-500/40 text-xs font-bold text-emerald-300 transition-all shadow-sm"
+            title="افزودن و دعوت افراد به این تماس یا استریم"
+          >
+            <UserPlus className="w-3.5 h-3.5" />
+            <span>اد کردن افراد</span>
+          </button>
+
           <button
             onClick={() => setShowGameActivity(!showGameActivity)}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition border ${
@@ -309,12 +373,12 @@ export const VoiceVideoRoom: React.FC<VoiceVideoRoomProps> = ({
             title="بازی مشترک دوز"
           >
             <Gamepad2 className="w-4 h-4" />
-            بازی دوز گروهی
+            بازی دوز
           </button>
 
           <span className="text-xs bg-[#141624] px-3.5 py-1.5 rounded-xl border border-white/[0.1] flex items-center gap-1.5 text-white font-bold shadow-sm">
             <Users className="w-4 h-4 text-emerald-400" />
-            {participants.length} نفر
+            {participants.length} در استیج
           </span>
           <button
             onClick={() => setIsFullscreen(!isFullscreen)}
@@ -453,6 +517,80 @@ export const VoiceVideoRoom: React.FC<VoiceVideoRoomProps> = ({
                 {cell}
               </button>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Invite Friends Modal Drawer */}
+      {isInviteModalOpen && (
+        <div className="absolute inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-[#121424] border border-white/20 w-full max-w-md rounded-3xl p-6 shadow-2xl animate-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
+              <div className="flex items-center gap-2">
+                <UserPlus className="w-5 h-5 text-emerald-400" />
+                <h3 className="text-sm font-black text-white">افزودن و دعوت دوستان به استریم</h3>
+              </div>
+              <button
+                onClick={() => setIsInviteModalOpen(false)}
+                className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center"
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-300 mb-4 leading-relaxed">
+              هر کدام از دوستانتان را که می‌خواهید به این استریم و مکالمه بپیوندند، انتخاب و اضافه کنید:
+            </p>
+
+            <div className="space-y-2 max-h-64 overflow-y-auto no-scrollbar mb-5">
+              {availableFriends.length > 0 ? (
+                availableFriends.map((friend) => {
+                  const isAlreadyIn = participants.some((p) => p.id === friend.id);
+                  return (
+                    <div
+                      key={friend.id}
+                      className="p-2.5 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-between hover:bg-white/[0.08] transition"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <GamerAvatar styleId={friend.avatarStyle} size={36} />
+                        <div>
+                          <div className="text-xs font-bold text-white">{friend.name}</div>
+                          <div className="text-[10px] text-emerald-400 font-medium">آماده ملحق شدن</div>
+                        </div>
+                      </div>
+
+                      {isAlreadyIn ? (
+                        <span className="text-[10px] px-3 py-1 rounded-xl bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 flex items-center gap-1">
+                          <Check className="w-3 h-3" />
+                          حاضر در استیج
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => handleAddFriendToCall(friend)}
+                          className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow"
+                        >
+                          + اد کردن
+                        </button>
+                      )}
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="text-center py-6 text-xs text-slate-400">دوست فعالی برای دعوت یافت نشد.</div>
+              )}
+            </div>
+
+            {/* Direct Link Share Footer */}
+            <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+              <span className="text-[11px] text-slate-400">یا لینک را مستقیم بفرستید:</span>
+              <button
+                onClick={handleCopyStreamLink}
+                className="px-3 py-1.5 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-bold transition flex items-center gap-1"
+              >
+                {isCopiedLink ? <Check className="w-3.5 h-3.5" /> : <Share2 className="w-3.5 h-3.5" />}
+                <span>{isCopiedLink ? 'کپی شد' : 'کپی لینک مستقیم'}</span>
+              </button>
+            </div>
           </div>
         </div>
       )}
