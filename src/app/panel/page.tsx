@@ -272,15 +272,33 @@ export default function GalaxyUniverseApp() {
             </button>
           </div>
 
-          {/* Auth / Account Switch Button */}
-          <button
-            onClick={() => setIsAuthOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-600/20 hover:bg-purple-600/35 border border-purple-500/30 text-xs font-bold text-purple-300 transition-all shadow-sm"
-            title="ورود یا ثبت‌نام حساب کاربری"
-          >
-            <LogIn className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">ورود / ثبت‌نام</span>
-          </button>
+          {/* Auth / Account Switch Button (Only visible if not authenticated) */}
+          {activeUser.id === 'guest_user' ? (
+            <button
+              onClick={() => setIsAuthOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-600/20 hover:bg-purple-600/35 border border-purple-500/30 text-xs font-bold text-purple-300 transition-all shadow-sm"
+              title="ورود یا ثبت‌نام حساب کاربری"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">ورود / ثبت‌نام</span>
+            </button>
+          ) : (
+            <button
+              onClick={async () => {
+                try {
+                  await fetch('/api/v1/auth/logout', { method: 'POST' });
+                  window.location.reload();
+                } catch (e) {
+                  console.error('Logout error:', e);
+                }
+              }}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-xs font-bold text-red-300 transition-all shadow-sm"
+              title="خروج از حساب کاربری"
+            >
+              <LogIn className="w-3.5 h-3.5 rotate-180" />
+              <span className="hidden sm:inline">خروج</span>
+            </button>
+          )}
 
           <div
             onClick={() => setIsProfileOpen(true)}
