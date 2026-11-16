@@ -88,7 +88,7 @@ const PLANET_WORLDS: PlanetWorld[] = [
     openLobbies: 25,
     description: 'پایتخت کهکشان نکسوس برای گفتگوی آزاد، آشنایی با بازیکنان، پخش موسیقی و دورهمی.',
     coordinates: { x: 50, y: 50 },
-    size: 165,
+    size: 150,
     hubs: [
       { id: 'prime-chat', name: 'چت عمومی و تالار مرکزی', type: 'chat', activeCount: 154 },
       { id: 'prime-lounge', name: 'لاونج صوتی ۲۴ ساعته', type: 'voice', activeCount: 38 },
@@ -110,8 +110,8 @@ const PLANET_WORLDS: PlanetWorld[] = [
     activePilots: 142,
     openLobbies: 8,
     description: 'پایگاه لابی‌های کامپتیتیو، پرمیر، مچ‌های ۵v۵ و تمرین اسموک و ریتیک.',
-    coordinates: { x: 22, y: 32 },
-    size: 130,
+    coordinates: { x: 14, y: 34 },
+    size: 110,
     hubs: [
       { id: 'cs-general', name: 'چت متنی و هماهنگی اسکواد', type: 'chat', activeCount: 65 },
       { id: 'cs-lobby1', name: 'اتاق صوتی پرمیر رنک +۱۵k', type: 'voice', activeCount: 5 },
@@ -134,8 +134,8 @@ const PLANET_WORLDS: PlanetWorld[] = [
     activePilots: 189,
     openLobbies: 12,
     description: 'جامعه رقابت‌های آلتیمیت تیم، پرو کلابز ۱۱ نفره و تورنومنت‌های جایزه‌دار.',
-    coordinates: { x: 74, y: 26 },
-    size: 140,
+    coordinates: { x: 58, y: 24 },
+    size: 115,
     hubs: [
       { id: 'fc-general', name: 'چت عمومی استادیوم و کری‌خوانی', type: 'chat', activeCount: 92 },
       { id: 'fc-voice', name: 'ویس روم مسابقات ۱v۱ دوستانه', type: 'voice', activeCount: 14 },
@@ -157,8 +157,8 @@ const PLANET_WORLDS: PlanetWorld[] = [
     activePilots: 115,
     openLobbies: 6,
     description: 'هماهنگی پارتی‌های رنکد، تماشای مسابقات و آموزش هیروها.',
-    coordinates: { x: 30, y: 72 },
-    size: 125,
+    coordinates: { x: 26, y: 74 },
+    size: 105,
     hubs: [
       { id: 'dota-chat', name: 'تالار استراتژی و پیک‌ها', type: 'chat', activeCount: 48 },
       { id: 'dota-voice', name: 'اتاق ویس لابی کاستوم ۵v۵', type: 'voice', activeCount: 10 },
@@ -179,8 +179,8 @@ const PLANET_WORLDS: PlanetWorld[] = [
     activePilots: 168,
     openLobbies: 11,
     description: 'لابی‌های والورانت، لاین‌آپ‌ها، کلن‌وارز و کاستوم‌های ۲۴ ساعته.',
-    coordinates: { x: 68, y: 74 },
-    size: 135,
+    coordinates: { x: 56, y: 76 },
+    size: 110,
     hubs: [
       { id: 'val-chat', name: 'چت رادیانت‌ها و تیم‌یابی', type: 'chat', activeCount: 77 },
       { id: 'val-voice', name: 'اسکوات ۵ نفره رنک ایمورتال', type: 'voice', activeCount: 5 },
@@ -202,8 +202,8 @@ const PLANET_WORLDS: PlanetWorld[] = [
     activePilots: 124,
     openLobbies: 9,
     description: 'اسکوادهای ۳ نفره، رنکد پردیتور و مسترز با استریم و ویس زنده.',
-    coordinates: { x: 18, y: 65 },
-    size: 125,
+    coordinates: { x: 12, y: 68 },
+    size: 105,
     hubs: [
       { id: 'apex-chat', name: 'لابی هماهنگی اسکواد ۳ نفره', type: 'chat', activeCount: 42 },
       { id: 'apex-voice', name: 'ویس روم رنکد دیاموند و پردیتور', type: 'voice', activeCount: 6 },
@@ -224,8 +224,8 @@ const PLANET_WORLDS: PlanetWorld[] = [
     activePilots: 210,
     openLobbies: 15,
     description: 'سرورهای سوروایوال ایرانی، ساخت سازه‌های عظیم و هاردکور تیمی.',
-    coordinates: { x: 82, y: 62 },
-    size: 120,
+    coordinates: { x: 40, y: 80 },
+    size: 105,
     hubs: [
       { id: 'mc-chat', name: 'چت عمومی ماینرها و معرفی سرور', type: 'chat', activeCount: 88 },
       { id: 'mc-voice', name: 'ویس روم ساخت و ساز و پروژه', type: 'voice', activeCount: 12 },
@@ -247,7 +247,7 @@ const PLANET_WORLDS: PlanetWorld[] = [
     activePilots: 285,
     openLobbies: 18,
     description: 'سرورهای فایوم (FiveM)، رول‌پلی، هایست‌های سنگین و دورهمی شبانه.',
-    coordinates: { x: 48, y: 18 },
+    coordinates: { x: 38, y: 22 },
     size: 130,
     hubs: [
       { id: 'gta-chat', name: 'تالار شهر و معاملات هایست', type: 'chat', activeCount: 110 },
@@ -600,12 +600,12 @@ export default function GalaxyUniverseApp() {
         </div>
       </aside>
 
-      {/* 3. The 3D Orbital Canvas (Center) */}
-      <main className="relative w-full h-full flex items-center justify-center">
+      {/* 3. The 3D Orbital Canvas (Center - Left biased to avoid sidebar overlap) */}
+      <main className="relative w-full h-full flex items-center justify-center pl-0 md:pr-80">
         {/* Orbital Trajectory Circles in Space */}
-        <div className="orbit-ring w-[380px] h-[380px] top-1/2 left-1/2" />
-        <div className="orbit-ring w-[650px] h-[650px] top-1/2 left-1/2" style={{ animationDuration: '200s' }} />
-        <div className="orbit-ring w-[950px] h-[950px] top-1/2 left-1/2" style={{ animationDuration: '320s' }} />
+        <div className="orbit-ring w-[320px] h-[320px] top-1/2 left-[38%]" />
+        <div className="orbit-ring w-[540px] h-[540px] top-1/2 left-[38%]" style={{ animationDuration: '200s' }} />
+        <div className="orbit-ring w-[760px] h-[760px] top-1/2 left-[38%]" style={{ animationDuration: '320s' }} />
 
         {/* Orbiting 3D Planet Nodes */}
         {PLANET_WORLDS.map((planet) => {
@@ -614,7 +614,7 @@ export default function GalaxyUniverseApp() {
               key={planet.id}
               onClick={() => handleSelectPlanet(planet)}
               style={{
-                left: `${planet.coordinates.x}%`,
+                left: `${planet.coordinates.x * 0.72}%`,
                 top: `${planet.coordinates.y}%`,
                 transform: 'translate(-50%, -50%)',
               }}
