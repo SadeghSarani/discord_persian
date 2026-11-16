@@ -1,5 +1,5 @@
 import React from 'react';
-import { OrbiMascotV2, VexMascotV2 } from '../characters';
+import { OfficialOrbi, OfficialVex } from '../characters';
 import { Radio, Zap, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export const SignalSection: React.FC = () => {
@@ -55,12 +55,12 @@ export const SignalSection: React.FC = () => {
 
           {/* Orbi Drone Scanning from Top */}
           <div className="absolute top-2 right-4 z-30 transition-transform duration-300 hover:scale-110 animate-mascot-float">
-            <OrbiMascotV2 size={190} pose="scanning" expression="searching" />
+            <OfficialOrbi size={190} />
           </div>
 
           {/* Vex Observing from Bottom Left */}
           <div className="absolute -left-4 bottom-2 z-30 transition-transform duration-300 hover:scale-110 animate-mascot-float-reverse">
-            <VexMascotV2 size={210} pose="creative" expression="focused" />
+            <OfficialVex size={220} />
           </div>
         </div>
       </div>

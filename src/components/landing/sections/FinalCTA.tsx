@@ -1,6 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
-import { MimoMascotV2, ZyroMascotV2, VexMascotV2, OrbiMascotV2 } from '../characters';
+import {
+  OfficialMimo,
+  OfficialZyro,
+  OfficialVex,
+  OfficialOrbi,
+} from '../characters';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
 export const FinalCTA: React.FC = () => {
@@ -11,18 +16,18 @@ export const FinalCTA: React.FC = () => {
 
       <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-20">
         {/* Character Assembly Crest with floating animation */}
-        <div className="flex items-center justify-center -space-x-10 -space-x-reverse mb-8">
+        <div className="flex items-center justify-center -space-x-8 -space-x-reverse mb-8">
           <div className="transform -rotate-12 hover:scale-110 transition z-10 animate-mascot-float">
-            <MimoMascotV2 size={135} expression="celebrating" pose="celebrate" />
+            <OfficialMimo size={145} />
           </div>
           <div className="transform -translate-y-4 hover:scale-110 transition z-20 animate-mascot-float-reverse">
-            <ZyroMascotV2 size={155} pose="victory" expression="confident" />
+            <OfficialZyro size={165} />
           </div>
           <div className="transform translate-y-1 hover:scale-110 transition z-20 animate-mascot-float">
-            <VexMascotV2 size={160} pose="creative" expression="proud" />
+            <OfficialVex size={175} />
           </div>
           <div className="transform rotate-12 hover:scale-110 transition z-10 animate-mascot-float-reverse">
-            <OrbiMascotV2 size={140} pose="discovery" expression="excited" />
+            <OfficialOrbi size={140} />
           </div>
         </div>
 
