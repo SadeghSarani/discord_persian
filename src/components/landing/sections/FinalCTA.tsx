@@ -30,10 +30,10 @@ export const FinalCTA: React.FC = () => {
         </p>
 
         <Link
-          href="/"
+          href="/panel"
           className="px-10 py-5 rounded-2xl bg-gradient-to-r from-[#8B7CFF] via-[#7C3AED] to-[#43C9D8] hover:opacity-95 text-white font-black text-lg shadow-[0_0_40px_rgba(139,124,255,0.6)] transition hover:scale-105 active:scale-95 flex items-center gap-3"
         >
-          <span>بزن بریم NEXUS!</span>
+          <span>بزن بریم به پنل NEXUS!</span>
           <ArrowRight className="w-5 h-5 rotate-180" />
         </Link>
 

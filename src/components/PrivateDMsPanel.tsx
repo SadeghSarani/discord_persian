@@ -34,6 +34,7 @@ export default function PrivateDMsPanel({
 }: PrivateDMsPanelProps) {
   const [selectedFriend, setSelectedFriend] = useState<User>(friends[0] || null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [mobileChatView, setMobileChatView] = useState(false);
   const [dmInput, setDmInput] = useState('');
   const [dmMessages, setDmMessages] = useState<Record<string, Message[]>>({
     [friends[0]?.id || 'u1']: [
@@ -87,7 +88,7 @@ export default function PrivateDMsPanel({
     <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4" dir="rtl">
       <div className="relative w-full max-w-4xl h-[80vh] rounded-3xl bg-[#090c16]/95 border border-white/15 shadow-2xl flex overflow-hidden">
         {/* Left Side: Friends List & Search */}
-        <div className="w-80 bg-black/40 border-l border-white/10 flex flex-col">
+        <div className={`w-full md:w-80 bg-black/40 border-l border-white/10 flex flex-col ${mobileChatView ? 'hidden md:flex' : 'flex'}`}>
           {/* Header */}
           <div className="p-4 border-b border-white/10 flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -120,7 +121,10 @@ export default function PrivateDMsPanel({
               return (
                 <div
                   key={friend.id}
-                  onClick={() => setSelectedFriend(friend)}
+                  onClick={() => {
+                    setSelectedFriend(friend);
+                    setMobileChatView(true);
+                  }}
                   className={`p-2.5 rounded-2xl flex items-center justify-between cursor-pointer transition-all ${
                     isSelected
                       ? 'bg-white/15 border border-white/20 shadow-md'
@@ -148,12 +152,18 @@ export default function PrivateDMsPanel({
         </div>
 
         {/* Right Side: Conversation Area */}
-        <div className="flex-1 flex flex-col bg-black/20">
+        <div className={`flex-1 flex flex-col bg-black/20 ${!mobileChatView ? 'hidden md:flex' : 'flex'}`}>
           {selectedFriend ? (
             <>
               {/* Header with Call Actions */}
-              <div className="h-16 px-6 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
+              <div className="h-16 px-4 md:px-6 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
                 <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setMobileChatView(false)}
+                    className="md:hidden p-1.5 rounded-lg bg-white/5 text-slate-400 hover:text-white"
+                  >
+                    <X className="w-4 h-4 rotate-45" />
+                  </button>
                   <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-600 to-purple-600 flex items-center justify-center text-xs font-black text-white">
                     {selectedFriend.name.charAt(0)}
                   </div>

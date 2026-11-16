@@ -36,10 +36,10 @@ export const HeroSection: React.FC = () => {
         {/* Primary & Secondary Call to Actions */}
         <div className="flex flex-col sm:flex-row items-center gap-4 mb-10 w-full sm:w-auto">
           <Link
-            href="/"
+            href="/panel"
             className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-[#8B7CFF] via-[#7C3AED] to-[#43C9D8] hover:opacity-95 text-white font-black text-base shadow-[0_0_35px_rgba(139,124,255,0.5)] transition hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
           >
-            <span>وارد دنیای NEXUS شو</span>
+            <span>ورود به پنل کهکشان نکسوس</span>
             <ArrowRight className="w-5 h-5 rotate-180" />
           </Link>
 
