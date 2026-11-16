@@ -376,6 +376,16 @@ export default function GalaxyUniverseApp() {
             </button>
           </div>
 
+          {/* Auth / Account Switch Button */}
+          <button
+            onClick={() => setIsAuthOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-600/20 hover:bg-purple-600/35 border border-purple-500/30 text-xs font-bold text-purple-300 transition-all shadow-sm"
+            title="ورود یا ثبت‌نام حساب کاربری"
+          >
+            <LogIn className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">ورود / ثبت‌نام</span>
+          </button>
+
           <div
             onClick={() => setIsProfileOpen(true)}
             className="flex items-center gap-2 p-1 pl-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 cursor-pointer transition-all"
