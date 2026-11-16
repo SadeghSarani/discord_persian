@@ -49,8 +49,9 @@ export default function NexusUniverseLandingPage() {
           </div>
 
           <div className="flex items-center gap-4">
-            <Link href="/" className="hover:text-cyan-400 transition">ورود به کهکشان</Link>
-            <Link href="/glyphs" className="hover:text-purple-400 transition">سامانه آیکون‌ها (GLYPHS)</Link>
+            <Link href="/panel" className="text-slate-400 hover:text-white transition">ورود به پنل</Link>
+            <Link href="#moments" className="text-slate-400 hover:text-white transition">ویس‌روم‌ها</Link>
+            <Link href="#signal" className="text-slate-400 hover:text-white transition">نکسوس سیگنال</Link>
           </div>
         </div>
       </footer>

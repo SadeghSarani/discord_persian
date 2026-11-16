@@ -12,11 +12,11 @@ export const HeroSection: React.FC = () => {
       {/* Main Container */}
       <div className="max-w-6xl mx-auto w-full flex flex-col items-center text-center z-10">
         {/* Release Pill Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.1] border border-white/15 backdrop-blur-xl mb-6 shadow-lg transition cursor-pointer">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-          <span className="text-xs font-black text-cyan-300">نسل جدید شبکه اجتماعی گیمرها و خالقان ایرانی</span>
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/30 text-purple-200 border border-purple-500/40 font-mono">
-            NEXUS 3.0
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.06] border border-white/15 backdrop-blur-xl mb-6 shadow-lg">
+          <span className="w-2 h-2 rounded-full bg-[#57F287] animate-ping" />
+          <span className="text-xs font-black text-white">پلتفرم چت، ویس‌کال و دورهمی گیمرهای ایرانی</span>
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#5865F2]/30 text-[#7983F5] border border-[#5865F2]/40 font-mono">
+            DISCORD IR
           </span>
         </div>
 
