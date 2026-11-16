@@ -75,25 +75,52 @@ async function runDatabaseIntegrityTests() {
   // TEST 3: Compound Unique Invariant on MomentParticipant
   try {
     process.stdout.write('Test 3: Compound unique constraint on MomentParticipant [momentId, userId]... ');
-    const moment = await prisma.moment.findFirstOrThrow();
     const user = await prisma.user.findFirstOrThrow({ where: { username: 'sadegh' } });
-
-    await prisma.momentParticipant.create({
+    
+    // Create an isolated test moment with creator participant
+    const moment = await prisma.moment.create({
       data: {
-        momentId: moment.id,
-        userId: user.id, // User is already a participant
-      },
+        creatorId: user.id,
+        title: 'Integrity Test Moment',
+        description: 'Testing unique compound participant',
+        category: 'Gaming',
+        capacity: 4,
+        expiresAt: new Date(Date.now() + 3600000),
+        participants: {
+          create: {
+            userId: user.id,
+            status: 'ACTIVE'
+          }
+        }
+      }
     });
-    console.log('FAILED (Allowed duplicate participation)');
-    failed++;
-  } catch (err) {
-    if (err.code === 'P2002') {
-      console.log('PASSED (P2002 Compound unique constraint enforced)');
-      passed++;
-    } else {
-      console.log('FAILED (Unexpected error:', err.message, ')');
+
+    // Attempt duplicate join with same user and moment
+    try {
+      await prisma.momentParticipant.create({
+        data: {
+          momentId: moment.id,
+          userId: user.id,
+        },
+      });
+      console.log('FAILED (Allowed duplicate participation)');
       failed++;
+    } catch (innerErr) {
+      if (innerErr.code === 'P2002') {
+        console.log('PASSED (P2002 Compound unique constraint enforced)');
+        passed++;
+      } else {
+        console.log('FAILED (Unexpected error:', innerErr.message, ')');
+        failed++;
+      }
+    } finally {
+      // Clean up test moment
+      await prisma.momentParticipant.deleteMany({ where: { momentId: moment.id } });
+      await prisma.moment.delete({ where: { id: moment.id } });
     }
+  } catch (err) {
+    console.log('FAILED:', err.message);
+    failed++;
   }
 
   // TEST 4: Atomic Concurrency Lock on Moment Capacity
