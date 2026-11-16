@@ -1,107 +1,135 @@
 import React from 'react';
 import Link from 'next/link';
-import { DiscordStyleMascot, DiscordStyleRobot } from './DiscordStyleCharacters';
-import { ArrowRight, Download, Laptop, Smartphone, Volume2, Mic, Headphones } from 'lucide-react';
+import Image from 'next/image';
+import { Volume2, Mic, Headphones, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
 
 export const HeroUniverse: React.FC<{ className?: string }> = ({ className = '' }) => {
   return (
-    <div className={`relative w-full max-w-6xl mx-auto flex flex-col items-center select-none pt-4 pb-12 ${className}`}>
-      {/* Background Discord Blue/Purple Radial Ambient */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[450px] bg-gradient-to-r from-[#5865F2]/30 via-[#7983F5]/20 to-[#57F287]/20 rounded-full blur-[140px] pointer-events-none" />
+    <div className={`relative w-full max-w-6xl mx-auto flex flex-col items-center select-none pt-2 pb-8 ${className}`}>
+      {/* Background Radial Ambient */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[550px] bg-gradient-to-r from-purple-600/30 via-indigo-600/25 to-cyan-500/25 rounded-full blur-[150px] pointer-events-none" />
 
-      {/* Main Hero Visual Composition: UI Mockup flanked by Discord style vector characters */}
-      <div className="relative w-full flex items-center justify-center min-h-[460px] md:min-h-[520px]">
-        {/* Left Floating Discord-Style Plush Mascot */}
-        <div className="absolute -left-2 md:left-8 bottom-4 z-30 transform hover:scale-110 transition duration-300 animate-mascot-float cursor-pointer">
-          <DiscordStyleMascot size={230} />
-          {/* Chat Bubble from Mascot */}
-          <div className="absolute -top-10 -right-6 bg-white text-[#23272A] px-3.5 py-1.5 rounded-2xl rounded-bl-sm font-black text-xs shadow-xl flex items-center gap-1.5 whitespace-nowrap">
-            <span>سلااام! بیا دیسکافه 🎮</span>
-          </div>
-        </div>
+      {/* Main Squad Illustration Artwork with Glowing Glass Backdrop */}
+      <div className="relative w-full rounded-3xl bg-gradient-to-b from-[#111625]/90 via-[#0a0d17]/95 to-[#070910] border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.85)] overflow-hidden p-4 sm:p-8 backdrop-blur-2xl">
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
 
-        {/* Right Floating Friendly Robot */}
-        <div className="absolute -right-2 md:right-8 top-6 z-30 transform hover:scale-110 transition duration-300 animate-mascot-float-reverse cursor-pointer">
-          <DiscordStyleRobot size={180} />
-          <div className="absolute -bottom-8 -left-4 bg-[#57F287] text-[#23272A] px-3 py-1 rounded-2xl rounded-tr-sm font-black text-[11px] shadow-xl whitespace-nowrap">
-            <span>سیستم آنلاین و پرسرعت ⚡</span>
-          </div>
-        </div>
-
-        {/* Central High-Fidelity Discord Channel Stage Card */}
-        <div className="relative z-20 w-full max-w-2xl rounded-3xl bg-[#2B2D31]/95 border border-[#3F4147] shadow-[0_25px_60px_rgba(0,0,0,0.8)] overflow-hidden">
-          {/* Top Window Chrome */}
-          <div className="h-10 px-4 bg-[#1E1F22] border-b border-[#313338] flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#ED4245]" />
-              <span className="w-3 h-3 rounded-full bg-[#FEE75C]" />
-              <span className="w-3 h-3 rounded-full bg-[#57F287]" />
-              <span className="text-xs font-bold text-[#949BA4] mr-2"># لابی-اصلی-گیمرها</span>
+        {/* Top Header inside stage */}
+        <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-white/10">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5">
+              <span className="w-3 h-3 rounded-full bg-[#ED4245]/80" />
+              <span className="w-3 h-3 rounded-full bg-[#FEE75C]/80" />
+              <span className="w-3 h-3 rounded-full bg-[#57F287]/80" />
             </div>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#5865F2]/20 text-[#5865F2] font-black border border-[#5865F2]/30">
-              DISCORD IRAN LIVE
+            <span className="text-xs font-bold text-slate-300"># لابی-اصلی-نکسوس • شبکه ارتباطی مستقل</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+              <span>پینگ داخلی ۱۵ms</span>
+            </span>
+            <span className="text-[10px] px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 font-bold border border-purple-500/30">
+              NEXUS SQUAD
             </span>
           </div>
+        </div>
 
-          {/* Body: Voice Stage & Live Users */}
-          <div className="p-6 bg-[#313338] space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-white font-black text-sm">
-                <Volume2 className="w-4 h-4 text-[#57F287] animate-pulse" />
-                <span>ویس‌روم عمومی شماره ۱ (پینگ ۲۰ms تهران)</span>
+        {/* Hero Character Showcase Composition */}
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Visual Artwork Banner */}
+          <div className="lg:col-span-7 relative group">
+            <div className="relative rounded-2xl overflow-hidden border border-purple-500/30 shadow-[0_15px_40px_rgba(124,58,237,0.25)] bg-[#0b0e1b]">
+              <Image
+                src="/nexus-squad-hero.webp"
+                alt="کاراکترها و اسکواد گیمرهای نکسوس"
+                width={1024}
+                height={576}
+                priority
+                className="w-full h-auto object-cover group-hover:scale-102 transition duration-500"
+              />
+              {/* Subtle Bottom vignette overlay */}
+              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0b0e1b] via-[#0b0e1b]/40 to-transparent pointer-events-none" />
+              
+              {/* Badges floating on image */}
+              <div className="absolute bottom-3 right-3 left-3 flex items-center justify-between">
+                <span className="text-[11px] font-black text-white bg-black/60 backdrop-blur-md px-3 py-1 rounded-xl border border-white/15">
+                  🎮 اسکواد رسمی نکسوس
+                </span>
+                <span className="text-[10px] font-bold text-cyan-300 bg-cyan-950/70 backdrop-blur-md px-2.5 py-1 rounded-xl border border-cyan-500/30">
+                  دورهمی زنده و پایدار
+                </span>
               </div>
-              <span className="text-xs text-[#57F287] font-bold">● ۶ کاربر متصل</span>
             </div>
+          </div>
 
-            {/* Avatars Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {[
-                { name: 'صادق (ادمین)', color: '#5865F2', speaking: true, role: 'Owner' },
-                { name: 'آرین_CS', color: '#57F287', speaking: true, role: 'پرمیر رنک ۱۸k' },
-                { name: 'کیان_FC', color: '#FEE75C', speaking: false, role: 'پروکلابز' },
-                { name: 'مریم', color: '#EB459E', speaking: false, role: 'طراح UI' },
-                { name: 'سامان_GTA', color: '#ED4245', speaking: false, role: 'رول‌پلی' },
-                { name: 'شما (مهمان)', color: '#949BA4', speaking: false, role: 'خلبان تازه' },
-              ].map((user, i) => (
-                <div
-                  key={i}
-                  className={`p-3 rounded-2xl bg-[#2B2D31] flex items-center justify-between border transition-all ${
-                    user.speaking ? 'border-[#57F287] shadow-[0_0_15px_rgba(87,242,135,0.3)]' : 'border-[#3F4147]'
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5 truncate">
-                    <div
-                      style={{ backgroundColor: user.color }}
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black text-white shrink-0 shadow"
-                    >
-                      {user.name.charAt(0)}
-                    </div>
-                    <div className="truncate">
-                      <div className="text-xs font-bold text-white truncate">{user.name}</div>
-                      <div className="text-[10px] text-[#949BA4]">{user.role}</div>
-                    </div>
-                  </div>
-                  {user.speaking ? (
-                    <Mic className="w-3.5 h-3.5 text-[#57F287]" />
-                  ) : (
-                    <Headphones className="w-3.5 h-3.5 text-[#949BA4]" />
-                  )}
+          {/* Real Live Voice Room Preview (5 cols) */}
+          <div className="lg:col-span-5 flex flex-col gap-3">
+            <div className="p-4 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-xl">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2 text-white font-black text-xs">
+                  <Volume2 className="w-4 h-4 text-[#57F287] animate-pulse" />
+                  <span>ویس‌روم شماره ۱ (استیج گیمینگ)</span>
                 </div>
-              ))}
-            </div>
-
-            {/* Bottom Input Area Mockup */}
-            <div className="pt-2 flex items-center gap-2">
-              <div className="flex-1 px-4 py-2.5 rounded-xl bg-[#383A40] text-xs text-[#949BA4] border border-[#3F4147]">
-                ارسال پیام در #لابی-اصلی-گیمرها...
+                <span className="text-[11px] text-[#57F287] font-bold">● متصل</span>
               </div>
+
+              {/* Users in Voice */}
+              <div className="space-y-2 mb-3">
+                {[
+                  { name: 'صادق (ادمین)', color: '#5865F2', role: 'سازنده سرور', speaking: true },
+                  { name: 'آرین (Premier 19k)', color: '#10b981', role: 'کانتر ۲', speaking: true },
+                  { name: 'ربات هوشمند NexusBot', color: '#8b5cf6', role: 'دستیار خودکار', speaking: false },
+                  { name: 'کاربر مهمان (شما)', color: '#ec4899', role: 'آماده ورود', speaking: false },
+                ].map((user, idx) => (
+                  <div
+                    key={idx}
+                    className={`p-2.5 rounded-xl bg-white/[0.04] border flex items-center justify-between transition ${
+                      user.speaking ? 'border-emerald-500/50 shadow-[0_0_12px_rgba(16,185,129,0.2)]' : 'border-white/5'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        style={{ backgroundColor: user.color }}
+                        className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black text-white shrink-0 shadow"
+                      >
+                        {user.name.charAt(0)}
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-white">{user.name}</div>
+                        <div className="text-[10px] text-slate-400">{user.role}</div>
+                      </div>
+                    </div>
+                    {user.speaking ? (
+                      <Mic className="w-3.5 h-3.5 text-emerald-400" />
+                    ) : (
+                      <Headphones className="w-3.5 h-3.5 text-slate-500" />
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Quick direct CTA */}
               <Link
                 href="/panel"
-                className="px-5 py-2.5 rounded-xl bg-[#5865F2] hover:bg-[#4752C4] text-white text-xs font-black shadow-lg transition flex items-center gap-2 shrink-0"
+                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-xs shadow-lg transition flex items-center justify-center gap-2 group"
               >
-                <span>پیوستن به ویس</span>
-                <ArrowRight className="w-3.5 h-3.5 rotate-180" />
+                <span>ورود و ملحق شدن به ویس‌روم</span>
+                <ArrowRight className="w-3.5 h-3.5 rotate-180 group-hover:-translate-x-1 transition" />
               </Link>
+            </div>
+
+            {/* Feature Highlights beneath */}
+            <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-400">
+              <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-cyan-400 shrink-0" />
+                <span>رمزنگاری سرتاسری</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-center gap-2">
+                <Zap className="w-4 h-4 text-amber-400 shrink-0" />
+                <span>بدون نیاز به نصب</span>
+              </div>
             </div>
           </div>
         </div>

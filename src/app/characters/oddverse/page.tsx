@@ -247,6 +247,31 @@ export default function OddverseShowcasePage() {
               </div>
 
               <MimoMascotV2 size={scaleFactor} expression={mimoExpr} pose={mimoPose} variant={renderMode} />
+
+              {/* CoAnimator Rendered Animation Player */}
+              <div className="mt-6 w-full max-w-md p-4 rounded-2xl bg-black/50 border border-purple-500/20 flex flex-col items-center gap-2">
+                <div className="flex items-center justify-between w-full text-xs font-bold text-purple-300">
+                  <span className="flex items-center gap-1.5">
+                    <Activity className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>رندر متحرک CoAnimator (کروماکی ۵ ثانیه)</span>
+                  </span>
+                  <a
+                    href="/animations/mimo-animation.mp4"
+                    download
+                    className="text-[10px] bg-purple-600/60 hover:bg-purple-600 text-white px-2 py-0.5 rounded transition"
+                  >
+                    دانلود MP4
+                  </a>
+                </div>
+                <video
+                  src="/animations/mimo-animation.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="rounded-xl w-full h-auto max-h-56 object-contain border border-white/5 shadow-inner"
+                />
+              </div>
             </div>
 
             {/* Interactive Control Panel */}
@@ -317,6 +342,31 @@ export default function OddverseShowcasePage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-7 p-8 rounded-3xl bg-gradient-to-b from-[#0e162a] via-[#090f1d] to-[#04060f] border border-cyan-500/30 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl">
               <ZyroMascotV2 size={scaleFactor} expression={zyroExpr} pose={zyroPose} variant={renderMode} />
+
+              {/* CoAnimator Rendered Animation Player */}
+              <div className="mt-6 w-full max-w-md p-4 rounded-2xl bg-black/50 border border-cyan-500/20 flex flex-col items-center gap-2">
+                <div className="flex items-center justify-between w-full text-xs font-bold text-cyan-300">
+                  <span className="flex items-center gap-1.5">
+                    <Activity className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>رندر متحرک CoAnimator (کروماکی ۵ ثانیه)</span>
+                  </span>
+                  <a
+                    href="/animations/zyro-animation.mp4"
+                    download
+                    className="text-[10px] bg-cyan-600/60 hover:bg-cyan-600 text-white px-2 py-0.5 rounded transition"
+                  >
+                    دانلود MP4
+                  </a>
+                </div>
+                <video
+                  src="/animations/zyro-animation.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="rounded-xl w-full h-auto max-h-56 object-contain border border-white/5 shadow-inner"
+                />
+              </div>
             </div>
 
             <div className="lg:col-span-5 space-y-6">

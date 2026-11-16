@@ -21,6 +21,9 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
+# Ensure Prisma client is freshly generated for the current schema before build
+RUN npx prisma generate
+
 RUN npm run build
 
 # 4. Production Runner (Minimal lightweight runtime)

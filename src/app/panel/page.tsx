@@ -36,6 +36,9 @@ import {
   Flame as FireIcon,
 } from 'lucide-react';
 import { User, Message } from '@/types/discord';
+import { PlanetWorld, SolarSystem } from '@/types/planet';
+import { NexusIcon } from '@/components/glyphs';
+import { getSolarSystems } from '@/data/planetsData';
 import { initialMessages, currentUser, sampleUsers } from '@/data/mockData';
 import { ProfileModal } from '@/components/ProfileModal';
 import { AuthModal } from '@/components/AuthModal';
@@ -45,225 +48,34 @@ import { VoiceVideoRoom } from '@/components/VoiceVideoRoom';
 import SignalRadarModal from '@/components/SignalRadarModal';
 import confetti from 'canvas-confetti';
 
-interface PlanetWorld {
-  id: string;
-  name: string;
-  subTitle: string;
-  genre: string;
-  slug: string;
-  theme: 'cs2' | 'fc' | 'dota2' | 'val' | 'prime' | 'apex' | 'minecraft' | 'gta';
-  hasRings?: boolean;
-  gradient: string;
-  shadowColor: string;
-  accentColor: string;
-  icon: string;
-  activePilots: number;
-  openLobbies: number;
-  description: string;
-  coordinates: { x: number; y: number };
-  size: number;
-  hubs: {
-    id: string;
-    name: string;
-    type: 'chat' | 'voice' | 'tournament';
-    activeCount: number;
-  }[];
-  musicTrack: string;
-}
-
-const PLANET_WORLDS: PlanetWorld[] = [
-  {
-    id: 'planet-hub',
-    name: 'سیاره مرکزی نکسوس (Nexus Prime)',
-    subTitle: 'The Central Social Metropolis',
-    genre: 'چت عمومی و دورهمی گیمرها',
-    slug: 'prime',
-    theme: 'prime',
-    hasRings: true,
-    gradient: 'from-purple-600 via-indigo-600 to-cyan-500',
-    shadowColor: 'rgba(168, 85, 247, 0.6)',
-    accentColor: '#a855f7',
-    icon: '🌌',
-    activePilots: 340,
-    openLobbies: 25,
-    description: 'پایتخت کهکشان نکسوس برای گفتگوی آزاد، آشنایی با بازیکنان، پخش موسیقی و دورهمی.',
-    coordinates: { x: 50, y: 50 },
-    size: 150,
-    hubs: [
-      { id: 'prime-chat', name: 'چت عمومی و تالار مرکزی', type: 'chat', activeCount: 154 },
-      { id: 'prime-lounge', name: 'لاونج صوتی ۲۴ ساعته', type: 'voice', activeCount: 38 },
-      { id: 'prime-games', name: 'پاد بازی‌های سریع چندنفره', type: 'tournament', activeCount: 18 },
-    ],
-    musicTrack: 'Interstellar Lo-Fi Radio (Chill)',
-  },
-  {
-    id: 'planet-cs2',
-    name: 'سیاره کانتر ۲ (Dust Orbit)',
-    subTitle: 'Counter-Strike 2 & Tactical FPS',
-    genre: 'شوتینگ تاکتیکال و پرمیر',
-    slug: 'cs2',
-    theme: 'cs2',
-    gradient: 'from-amber-600 via-orange-500 to-yellow-400',
-    shadowColor: 'rgba(245, 158, 11, 0.5)',
-    accentColor: '#f59e0b',
-    icon: '💣',
-    activePilots: 142,
-    openLobbies: 8,
-    description: 'پایگاه لابی‌های کامپتیتیو، پرمیر، مچ‌های ۵v۵ و تمرین اسموک و ریتیک.',
-    coordinates: { x: 14, y: 34 },
-    size: 110,
-    hubs: [
-      { id: 'cs-general', name: 'چت متنی و هماهنگی اسکواد', type: 'chat', activeCount: 65 },
-      { id: 'cs-lobby1', name: 'اتاق صوتی پرمیر رنک +۱۵k', type: 'voice', activeCount: 5 },
-      { id: 'cs-tourney', name: 'جام هفتگی CS2 دیسکافه', type: 'tournament', activeCount: 32 },
-    ],
-    musicTrack: 'Dust II Combat Radio (Live)',
-  },
-  {
-    id: 'planet-fc27',
-    name: 'سیاره فوتبال ۲۷ (San Siro Core)',
-    subTitle: 'EA FC & Football Universe',
-    genre: 'شبیه‌ساز فوتبال و تورنومنت',
-    slug: 'fc',
-    theme: 'fc',
-    hasRings: true,
-    gradient: 'from-emerald-600 via-teal-500 to-cyan-400',
-    shadowColor: 'rgba(16, 185, 129, 0.5)',
-    accentColor: '#10b981',
-    icon: '⚽',
-    activePilots: 189,
-    openLobbies: 12,
-    description: 'جامعه رقابت‌های آلتیمیت تیم، پرو کلابز ۱۱ نفره و تورنومنت‌های جایزه‌دار.',
-    coordinates: { x: 58, y: 24 },
-    size: 115,
-    hubs: [
-      { id: 'fc-general', name: 'چت عمومی استادیوم و کری‌خوانی', type: 'chat', activeCount: 92 },
-      { id: 'fc-voice', name: 'ویس روم مسابقات ۱v۱ دوستانه', type: 'voice', activeCount: 14 },
-      { id: 'fc-proclubs', name: 'باشگاه رسمی پرو کلابز ایرانیان', type: 'tournament', activeCount: 22 },
-    ],
-    musicTrack: 'Stadium Anthem & Crowds 24/7',
-  },
-  {
-    id: 'planet-dota2',
-    name: 'سیاره دوتا ۲ (Ancient Sanctum)',
-    subTitle: 'Dota 2 & Strategy Realm',
-    genre: 'موبا و استراتژیک',
-    slug: 'dota2',
-    theme: 'dota2',
-    gradient: 'from-red-600 via-rose-500 to-amber-600',
-    shadowColor: 'rgba(239, 68, 68, 0.5)',
-    accentColor: '#ef4444',
-    icon: '⚔️',
-    activePilots: 115,
-    openLobbies: 6,
-    description: 'هماهنگی پارتی‌های رنکد، تماشای مسابقات و آموزش هیروها.',
-    coordinates: { x: 26, y: 74 },
-    size: 105,
-    hubs: [
-      { id: 'dota-chat', name: 'تالار استراتژی و پیک‌ها', type: 'chat', activeCount: 48 },
-      { id: 'dota-voice', name: 'اتاق ویس لابی کاستوم ۵v۵', type: 'voice', activeCount: 10 },
-    ],
-    musicTrack: 'The International Live Cast',
-  },
-  {
-    id: 'planet-valorant',
-    name: 'سیاره والورانت (Radiant Haven)',
-    subTitle: 'Valorant & Future Tactics',
-    genre: 'هیرو شوتر و تاکتیکال',
-    slug: 'val',
-    theme: 'val',
-    gradient: 'from-pink-600 via-fuchsia-500 to-rose-400',
-    shadowColor: 'rgba(236, 72, 153, 0.5)',
-    accentColor: '#ec4899',
-    icon: '🎯',
-    activePilots: 168,
-    openLobbies: 11,
-    description: 'لابی‌های والورانت، لاین‌آپ‌ها، کلن‌وارز و کاستوم‌های ۲۴ ساعته.',
-    coordinates: { x: 56, y: 76 },
-    size: 110,
-    hubs: [
-      { id: 'val-chat', name: 'چت رادیانت‌ها و تیم‌یابی', type: 'chat', activeCount: 77 },
-      { id: 'val-voice', name: 'اسکوات ۵ نفره رنک ایمورتال', type: 'voice', activeCount: 5 },
-    ],
-    musicTrack: 'VCT Champions Tokyo Synth',
-  },
-  {
-    id: 'planet-apex',
-    name: 'سیاره اپکس لجندز (Storm Point Orbit)',
-    subTitle: 'Apex Legends Battle Royale',
-    genre: 'بتل رویال با سرعت بالا',
-    slug: 'apex',
-    theme: 'apex',
-    hasRings: true,
-    gradient: 'from-sky-600 via-cyan-500 to-blue-400',
-    shadowColor: 'rgba(14, 165, 233, 0.5)',
-    accentColor: '#0ea5e9',
-    icon: '⚡',
-    activePilots: 124,
-    openLobbies: 9,
-    description: 'اسکوادهای ۳ نفره، رنکد پردیتور و مسترز با استریم و ویس زنده.',
-    coordinates: { x: 12, y: 68 },
-    size: 105,
-    hubs: [
-      { id: 'apex-chat', name: 'لابی هماهنگی اسکواد ۳ نفره', type: 'chat', activeCount: 42 },
-      { id: 'apex-voice', name: 'ویس روم رنکد دیاموند و پردیتور', type: 'voice', activeCount: 6 },
-    ],
-    musicTrack: 'Apex Legends Main Electronic Theme',
-  },
-  {
-    id: 'planet-minecraft',
-    name: 'سیاره ماینکرفت (Voxel Universe)',
-    subTitle: 'Minecraft & Creative Sandbox',
-    genre: 'سندباکس و ساخت و ساز',
-    slug: 'minecraft',
-    theme: 'minecraft',
-    gradient: 'from-emerald-600 via-green-500 to-lime-400',
-    shadowColor: 'rgba(34, 197, 94, 0.5)',
-    accentColor: '#22c55e',
-    icon: '🟩',
-    activePilots: 210,
-    openLobbies: 15,
-    description: 'سرورهای سوروایوال ایرانی، ساخت سازه‌های عظیم و هاردکور تیمی.',
-    coordinates: { x: 40, y: 80 },
-    size: 105,
-    hubs: [
-      { id: 'mc-chat', name: 'چت عمومی ماینرها و معرفی سرور', type: 'chat', activeCount: 88 },
-      { id: 'mc-voice', name: 'ویس روم ساخت و ساز و پروژه', type: 'voice', activeCount: 12 },
-    ],
-    musicTrack: 'C418 Subwoofer Lullaby Chill',
-  },
-  {
-    id: 'planet-gta',
-    name: 'سیاره سن آندریاس (Neon Los Santos)',
-    subTitle: 'GTA Online & Roleplay',
-    genre: 'جهان‌باز و رول‌پلی شهری',
-    slug: 'gta',
-    theme: 'gta',
-    hasRings: true,
-    gradient: 'from-rose-600 via-orange-500 to-amber-400',
-    shadowColor: 'rgba(244, 63, 94, 0.5)',
-    accentColor: '#f43f5e',
-    icon: '🚗',
-    activePilots: 285,
-    openLobbies: 18,
-    description: 'سرورهای فایوم (FiveM)، رول‌پلی، هایست‌های سنگین و دورهمی شبانه.',
-    coordinates: { x: 38, y: 22 },
-    size: 130,
-    hubs: [
-      { id: 'gta-chat', name: 'تالار شهر و معاملات هایست', type: 'chat', activeCount: 110 },
-      { id: 'gta-voice', name: 'بیسیم رادیویی پلیس و اوباش', type: 'voice', activeCount: 20 },
-    ],
-    musicTrack: 'Los Santos Underground Radio Live',
-  },
-];
+const INITIAL_SOLAR_SYSTEMS: SolarSystem[] = getSolarSystems();
 
 export default function GalaxyUniverseApp() {
+  const [solarSystems, setSolarSystems] = useState<SolarSystem[]>(INITIAL_SOLAR_SYSTEMS);
+  const [activeSystem, setActiveSystem] = useState<SolarSystem | null>(null);
   const [activePlanet, setActivePlanet] = useState<PlanetWorld | null>(null);
   const [selectedHub, setSelectedHub] = useState<string>('prime-chat');
   const [activeUser, setActiveUser] = useState<User>(currentUser);
   const [isCopied, setIsCopied] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+
+  
+  // Load real admin communities from database API and merge into 50 cosmic planets
+  useEffect(() => {
+    async function loadAdminCommunities() {
+      try {
+        const res = await fetch('/api/v1/communities');
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setSolarSystems(getSolarSystems(json.data));
+        }
+      } catch (err) {
+        console.error('Failed to load communities:', err);
+      }
+    }
+    loadAdminCommunities();
+  }, []);
 
   // Audio / Mic
   const [isMuted, setIsMuted] = useState(false);
@@ -319,17 +131,21 @@ export default function GalaxyUniverseApp() {
     const handleHash = () => {
       const hash = window.location.hash.replace('#', '').toLowerCase();
       if (hash) {
-        const found = PLANET_WORLDS.find((p) => p.slug === hash);
-        if (found) {
-          setActivePlanet(found);
-          setSelectedHub(found.hubs[0]?.id || '');
+        for (const system of solarSystems) {
+          const found = system.planets.find((p) => p.slug === hash);
+          if (found) {
+            setActiveSystem(system);
+            setActivePlanet(found);
+            setSelectedHub(found.hubs[0]?.id || '');
+            return;
+          }
         }
       }
     };
     handleHash();
     window.addEventListener('hashchange', handleHash);
     return () => window.removeEventListener('hashchange', handleHash);
-  }, []);
+  }, [solarSystems]);
 
   const handleSelectPlanet = (planet: PlanetWorld) => {
     setActivePlanet(planet);
@@ -399,64 +215,31 @@ export default function GalaxyUniverseApp() {
         </div>
 
         {/* Center Quick Navigation, Signals & DMs Button */}
-        <div className="hidden md:flex items-center gap-3">
-          {/* NEXUS SIGNAL Engine Trigger */}
+        <div className="hidden 2xl:flex items-center gap-2">
+          {/* Clean minimal quick triggers */}
           <button
             onClick={() => setIsSignalRadarOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-cyan-600/30 to-blue-600/30 hover:from-cyan-600/50 hover:to-blue-600/50 border border-cyan-500/40 text-xs font-bold text-white transition-all shadow-md group"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-600/20 hover:bg-cyan-600/35 border border-cyan-500/30 text-xs font-bold text-cyan-200 transition-all"
           >
-            <div className="relative">
-              <Radio className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform animate-pulse" />
-              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-            </div>
-            <span>رادار سیگنال (الان چی می‌خوای؟)</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-cyan-500/30 text-cyan-200 border border-cyan-500/40 font-mono">
-              جدید
-            </span>
+            <Radio className="w-3.5 h-3.5 text-cyan-400" />
+            <span>رادار سیگنال</span>
           </button>
 
           <button
             onClick={() => setIsDMsOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600/30 to-pink-600/30 hover:from-purple-600/50 hover:to-pink-600/50 border border-purple-500/40 text-xs font-bold text-white transition-all shadow-md group"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-pink-600/20 hover:bg-pink-600/35 border border-pink-500/30 text-xs font-bold text-pink-200 transition-all"
           >
-            <div className="relative">
-              <MessageSquare className="w-4 h-4 text-pink-400 group-hover:scale-110 transition-transform" />
-              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400" />
-            </div>
-            <span>چت خصوصی، دوستان و تماس</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-pink-500/30 text-pink-200 border border-pink-500/40 font-mono">
-              {sampleUsers.length}
-            </span>
+            <MessageSquare className="w-3.5 h-3.5 text-pink-400" />
+            <span>پیام‌های خصوصی</span>
           </button>
 
           <button
             onClick={() => setIsHelpOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-bold text-cyan-300 transition-all shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-slate-300 transition-all"
           >
-            <HelpCircle className="w-4 h-4" />
+            <HelpCircle className="w-3.5 h-3.5 text-slate-400" />
             <span>راهنما</span>
           </button>
-
-          {/* NEXUS UNIVERSE Landing Page link */}
-          <a
-            href="/landing"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-pink-600/25 to-purple-600/25 hover:from-pink-600/40 hover:to-purple-600/40 border border-pink-500/40 text-xs font-bold text-pink-200 transition-all shadow-sm"
-            title="مشاهده لندینگ پیج و کاراکترهای اورجینال NEXUS UNIVERSE"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-pink-300" />
-            <span>لندینگ پیج اصلی</span>
-          </a>
-
-          {/* NEXUS GLYPHS Showcase link */}
-          <a
-            href="/glyphs"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#8B7CFF]/20 hover:bg-[#8B7CFF]/35 border border-[#8B7CFF]/40 text-xs font-bold text-[#b4a9ff] transition-all shadow-sm"
-            title="مشاهده سامانه نشانه‌شناسی و ۲۰ آیکون جدید نکسوس"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-[#43C9D8]" />
-            <span>آیکون‌ها</span>
-          </a>
         </div>
 
         {/* User Identity & Audio Controls */}
@@ -515,20 +298,32 @@ export default function GalaxyUniverseApp() {
         </div>
       </header>
 
-      {/* 2. Clear Left Sidebar Directory ("سیارات و روم‌های چت") */}
+      {/* 2. Left Sidebar Directory (منظومه‌ها و سیارات) */}
       <aside className={`absolute right-4 sm:right-6 top-20 sm:top-24 bottom-6 sm:bottom-16 w-[calc(100vw-2rem)] sm:w-80 rounded-3xl bg-[#090c16]/95 backdrop-blur-2xl border border-white/10 z-30 flex flex-col overflow-hidden shadow-2xl transition-all duration-300 ${
         isSidebarOpen ? 'translate-x-0' : 'translate-x-[120%] xl:translate-x-0'
       }`}>
         {/* Panel Header */}
         <div className="p-4 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <MessageSquare className="w-4 h-4 text-purple-400" />
-            <h3 className="text-xs font-black text-white">سیارات چت و روم‌های فعال</h3>
+            <Globe2 className="w-4 h-4 text-purple-400" />
+            <h3 className="text-xs font-black text-white">
+              {activeSystem ? activeSystem.name.split('(')[0] : 'کهکشان منظومه‌های نکسوس'}
+            </h3>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-300 font-bold border border-purple-500/20">
-              {PLANET_WORLDS.length} سیاره
-            </span>
+            {activeSystem ? (
+              <button
+                onClick={() => setActiveSystem(null)}
+                className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30 hover:bg-cyan-500/30 transition flex items-center gap-1"
+              >
+                <span>کل کهکشان</span>
+                <ChevronLeft className="w-3 h-3 rotate-180" />
+              </button>
+            ) : (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-300 font-bold border border-purple-500/20">
+                {solarSystems.length} منظومه
+              </span>
+            )}
             <button
               onClick={() => setIsSidebarOpen(false)}
               className="xl:hidden p-1 rounded-lg text-slate-400 hover:text-white"
@@ -539,11 +334,15 @@ export default function GalaxyUniverseApp() {
         </div>
 
         {/* Explanatory Banner for Users */}
-        <div className="p-3 mx-3 my-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-[11px] text-cyan-200 leading-relaxed font-medium">
-          💡 <strong>راهنما:</strong> روی هر سیاره کلیک کنید تا وارد چت، ویس‌روم‌ها و تیم‌های همان بازی شوید.
+        <div className="p-3 mx-3 my-2 rounded-xl bg-purple-500/10 border border-purple-500/20 text-[11px] text-purple-200 leading-relaxed font-medium">
+          {activeSystem ? (
+            <span>🚀 <strong>در حال مشاهده منظومه:</strong> روی هر سیاره کلیک کنید تا وارد چت و ویس‌روم شوید.</span>
+          ) : (
+            <span>🌌 روی هر <strong>منظومه</strong> کلیک کنید تا وارد سیارات تخصصی آن حوزه شوید.</span>
+          )}
         </div>
 
-        {/* Planet List Items */}
+        {/* Systems & Planets List Items */}
         <div className="flex-1 overflow-y-auto p-3 space-y-2 sleek-scrollbar">
           {/* Quick Signal Radar Action Card */}
           <div
@@ -588,98 +387,232 @@ export default function GalaxyUniverseApp() {
             </div>
           </div>
 
-          {PLANET_WORLDS.map((planet) => {
-            const isSelected = activePlanet?.id === planet.id;
+          {/* If looking at a single Solar System, show its planets */}
+          {activeSystem ? (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between px-1 text-[11px] text-slate-400 font-bold">
+                <span>سیارات این منظومه:</span>
+                <button
+                  onClick={() => setActiveSystem(null)}
+                  className="text-cyan-400 hover:underline flex items-center gap-1 text-[10px]"
+                >
+                  <ArrowRight className="w-3 h-3" />
+                  <span>بازگشت به منظومه‌ها</span>
+                </button>
+              </div>
 
-            return (
-              <div
-                key={planet.id}
-                onClick={() => handleSelectPlanet(planet)}
-                className={`p-3 rounded-2xl border transition-all cursor-pointer group ${
-                  isSelected
-                    ? 'bg-white/15 border-white/30 shadow-lg scale-[1.02]'
-                    : 'bg-white/[0.03] hover:bg-white/[0.08] border-white/5'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1.5">
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-2xl filter drop-shadow">{planet.icon}</span>
-                    <div>
-                      <div className="text-xs font-black text-white group-hover:text-cyan-300 transition-colors">
-                        {planet.name.split('(')[0]}
+              {activeSystem.planets.map((planet) => {
+                const isSelected = activePlanet?.id === planet.id;
+                return (
+                  <div
+                    key={planet.id}
+                    onClick={() => handleSelectPlanet(planet)}
+                    className={`p-3 rounded-2xl border transition-all cursor-pointer group ${
+                      isSelected
+                        ? 'bg-white/15 border-white/30 shadow-lg scale-[1.02]'
+                        : 'bg-white/[0.03] hover:bg-white/[0.08] border-white/5'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1.5">
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-2xl filter drop-shadow">{planet.icon}</span>
+                        <div>
+                          <div className="text-xs font-black text-white group-hover:text-cyan-300 transition-colors">
+                            {planet.name.split('(')[0]}
+                          </div>
+                          <div className="text-[10px] text-slate-400 font-medium">{planet.genre}</div>
+                        </div>
                       </div>
-                      <div className="text-[10px] text-slate-400 font-medium">{planet.genre}</div>
+
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-black/60 text-emerald-400 font-bold border border-white/10 flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        {planet.activePilots}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 mt-2 pt-2 border-t border-white/5 text-[10px] text-slate-400">
+                      <span className="text-purple-400 font-bold">ورود به چت و ویس</span>
+                      <ChevronLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
                     </div>
                   </div>
+                );
+              })}
+            </div>
+          ) : (
+            /* Otherwise show list of Solar Systems */
+            <div className="space-y-2">
+              <div className="px-1 text-[11px] text-slate-400 font-bold">انتخاب منظومه:</div>
+              {solarSystems.map((system) => {
+                return (
+                  <div
+                    key={system.id}
+                    onClick={() => setActiveSystem(system)}
+                    className="p-3.5 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.08] transition-all cursor-pointer group hover:scale-[1.02] shadow-sm"
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2.5">
+                        <div
+                          style={{ borderColor: system.accentColor, backgroundColor: system.accentColor + '20' }}
+                          className="w-9 h-9 rounded-xl border flex items-center justify-center text-white shrink-0 shadow-md group-hover:scale-105 transition-transform"
+                        >
+                          <NexusIcon name={system.glyph} size={20} strokeWidth={2} />
+                        </div>
+                        <div>
+                          <div className="text-xs font-black text-white group-hover:text-purple-300 transition-colors">
+                            {system.name.split('(')[0]}
+                          </div>
+                          <div className="text-[10px] text-slate-400">{system.englishName}</div>
+                        </div>
+                      </div>
 
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-black/60 text-emerald-400 font-bold border border-white/10 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    {planet.activePilots}
-                  </span>
-                </div>
-
-                {/* Sub-hubs quick view */}
-                <div className="flex items-center gap-1.5 mt-2 pt-2 border-t border-white/5 text-[10px] text-slate-400">
-                  <span className="text-purple-400 font-bold">ورود به چت و ویس</span>
-                  <ChevronLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
-                </div>
-              </div>
-            );
-          })}
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-bold border border-purple-500/30">
+                        {system.planets.length} سیاره
+                      </span>
+                    </div>
+                    <div className="text-[10px] text-slate-400 line-clamp-1 mt-1 font-normal">
+                      {system.description}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </aside>
 
       {/* 3. The 3D Orbital Canvas (Center - Left biased to avoid sidebar overlap) */}
       <main className="relative w-full h-full flex items-center justify-center pl-0 md:pr-80">
         {/* Orbital Trajectory Circles in Space */}
-        <div className="orbit-ring w-[320px] h-[320px] top-1/2 left-[38%]" />
-        <div className="orbit-ring w-[540px] h-[540px] top-1/2 left-[38%]" style={{ animationDuration: '200s' }} />
-        <div className="orbit-ring w-[760px] h-[760px] top-1/2 left-[38%]" style={{ animationDuration: '320s' }} />
+        <div className="orbit-ring w-[340px] h-[340px] top-1/2 left-[38%]" />
+        <div className="orbit-ring w-[560px] h-[560px] top-1/2 left-[38%]" style={{ animationDuration: '200s' }} />
+        <div className="orbit-ring w-[780px] h-[780px] top-1/2 left-[38%]" style={{ animationDuration: '320s' }} />
 
-        {/* Orbiting 3D Planet Nodes */}
-        {PLANET_WORLDS.map((planet) => {
-          return (
-            <div
-              key={planet.id}
-              onClick={() => handleSelectPlanet(planet)}
-              style={{
-                left: `${planet.coordinates.x * 0.72}%`,
-                top: `${planet.coordinates.y}%`,
-                transform: 'translate(-50%, -50%)',
-              }}
-              className="absolute flex flex-col items-center group cursor-pointer z-20"
-            >
-              {/* Real 3D Planet Sphere via WebGL */}
-              <div className="relative flex items-center justify-center">
-                <Planet3D
-                  id={planet.id}
-                  size={planet.size}
-                  theme={planet.theme}
-                  hasRings={planet.hasRings}
-                />
-
-                {/* Pilot Count Badge */}
-                <div className="absolute -bottom-2 px-2.5 py-0.5 rounded-full bg-black/85 backdrop-blur-md border border-white/20 text-[10px] font-bold text-white flex items-center gap-1 shadow-lg pointer-events-none">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                  <span>{planet.activePilots} پلیر</span>
-                </div>
-              </div>
-
-              {/* Planet Information Card Tag */}
-              <div className="mt-3 text-center transition-all group-hover:translate-y-1">
-                <div className="text-sm font-extrabold text-white flex items-center gap-1.5 justify-center">
-                  <span>{planet.name}</span>
-                </div>
-                <div className="text-[11px] text-slate-400 font-medium">{planet.genre}</div>
-
-                {/* Direct Action Pill */}
-                <div className="mt-1.5 px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-500/30 text-[10px] text-cyan-300 font-bold group-hover:bg-cyan-500/30 transition-all">
-                  کلیک برای ورود به چت
-                </div>
-              </div>
+        {/* View Mode Header Pill in Center Space */}
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 md:left-[38%] z-20 flex items-center gap-2 px-4 py-2 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/15 shadow-xl">
+          {activeSystem ? (
+            <div className="flex items-center gap-2">
+              <span className="text-xl">{activeSystem.icon}</span>
+              <span className="text-xs font-black text-white">{activeSystem.name}</span>
+              <button
+                onClick={() => setActiveSystem(null)}
+                className="mr-2 px-2.5 py-1 rounded-xl bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 text-[10px] font-bold border border-purple-500/40 transition flex items-center gap-1"
+              >
+                <span>بازگشت به نمای کهکشان</span>
+                <ChevronLeft className="w-3 h-3 rotate-180" />
+              </button>
             </div>
-          );
-        })}
+          ) : (
+            <div className="flex items-center gap-2">
+              <span className="text-base">🌌</span>
+              <span className="text-xs font-bold text-slate-300">نمای کهکشان نکسوس — یک منظومه را برای ورود انتخاب کنید</span>
+            </div>
+          )}
+        </div>
+
+        {/* A. If inside a Solar System: Render the cleanly spaced 3D Planets */}
+        {activeSystem ? (
+          activeSystem.planets.map((planet) => {
+            return (
+              <div
+                key={planet.id}
+                onClick={() => handleSelectPlanet(planet)}
+                style={{
+                  left: `${planet.coordinates.x * 0.72}%`,
+                  top: `${planet.coordinates.y}%`,
+                  transform: 'translate(-50%, -50%)',
+                }}
+                className="absolute flex flex-col items-center group cursor-pointer z-20 transition-transform duration-300 hover:scale-105"
+              >
+                {/* Real 3D Planet Sphere via WebGL */}
+                <div className="relative flex items-center justify-center">
+                  <Planet3D
+                    id={planet.id}
+                    size={planet.size}
+                    theme={planet.theme}
+                    hasRings={planet.hasRings}
+                  />
+
+                  {/* Pilot Count Badge */}
+                  <div className="absolute -bottom-2 px-2.5 py-0.5 rounded-full bg-black/85 backdrop-blur-md border border-white/20 text-[10px] font-bold text-white flex items-center gap-1 shadow-lg pointer-events-none">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                    <span>{planet.activePilots} پلیر</span>
+                  </div>
+                </div>
+
+                {/* Planet Information Card Tag */}
+                <div className="mt-3 text-center transition-all group-hover:translate-y-1">
+                  <div className="text-sm font-extrabold text-white flex items-center gap-1.5 justify-center">
+                    <span>{planet.name}</span>
+                  </div>
+                  <div className="text-[11px] text-slate-400 font-medium">{planet.genre}</div>
+
+                  {/* Direct Action Pill */}
+                  <div className="mt-1.5 px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-500/30 text-[10px] text-cyan-300 font-bold group-hover:bg-cyan-500/30 transition-all">
+                    کلیک برای ورود به چت
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          /* B. Galaxy Overview: Render the 6 Majestic Solar System Hubs */
+          solarSystems.map((system) => {
+            return (
+              <div
+                key={system.id}
+                onClick={() => setActiveSystem(system)}
+                style={{
+                  left: `${system.coordinates.x * 0.72}%`,
+                  top: `${system.coordinates.y}%`,
+                  transform: 'translate(-50%, -50%)',
+                }}
+                className="absolute flex flex-col items-center group cursor-pointer z-20 transition-all duration-300 hover:scale-110"
+              >
+                {/* Glowing Cosmic Solar System Core Sphere */}
+                <div className="relative flex items-center justify-center">
+                  {/* Outer pulsating radial glow */}
+                  <div
+                    style={{ backgroundColor: system.accentColor }}
+                    className="absolute w-28 h-28 sm:w-36 sm:h-36 rounded-full blur-2xl opacity-40 group-hover:opacity-75 transition-opacity"
+                  />
+
+                  {/* Glowing Core Orbit Circle */}
+                  <div className={`w-20 h-20 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-tr ${system.bannerGradient} p-1 shadow-2xl flex items-center justify-center border-2 border-white/30 backdrop-blur-xl relative group-hover:rotate-6 group-hover:scale-105 transition-all duration-300`}>
+                    <div className="w-full h-full rounded-[22px] bg-black/50 flex flex-col items-center justify-center shadow-inner relative overflow-hidden">
+                      {/* Subtle cyber background grid */}
+                      <div className="absolute inset-0 bg-[radial-gradient(#ffffff15_1px,transparent_1px)] bg-[size:10px_10px] pointer-events-none" />
+                      <div className="text-white relative z-10 drop-shadow-[0_0_12px_rgba(255,255,255,0.7)]">
+                        <NexusIcon name={system.glyph} size={38} strokeWidth={2.2} />
+                      </div>
+                    </div>
+
+                    {/* Orbiting Satellite Dots indicating planets inside */}
+                    <div className="absolute -inset-2 rounded-3xl border border-white/20 border-dashed animate-spin" style={{ animationDuration: '25s' }} />
+                  </div>
+
+                  {/* Planet Count Pill */}
+                  <div className="absolute -bottom-2 px-3 py-0.5 rounded-full bg-black/90 backdrop-blur-md border border-white/25 text-[10px] font-black text-white flex items-center gap-1.5 shadow-xl">
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
+                    <span>{system.planets.length} سیاره</span>
+                  </div>
+                </div>
+
+                {/* System Title & Details */}
+                <div className="mt-3 text-center">
+                  <div className="text-xs sm:text-sm font-black text-white group-hover:text-cyan-300 transition-colors drop-shadow-md">
+                    {system.name.split('(')[0]}
+                  </div>
+                  <div className="text-[10px] text-slate-400 font-medium">
+                    {system.englishName}
+                  </div>
+                  <div className="mt-1 px-2.5 py-0.5 rounded-full bg-white/10 group-hover:bg-purple-600/40 text-[9px] text-slate-300 group-hover:text-purple-200 border border-white/10 transition">
+                    ورود به منظومه ➔
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
       </main>
 
       {/* 4. Planet Surface Holographic Portal (When a planet is opened) */}
