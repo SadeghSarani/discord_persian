@@ -437,6 +437,16 @@ export default function GalaxyUniverseApp() {
             <span>راهنما</span>
           </button>
 
+          {/* NEXUS UNIVERSE Landing Page link */}
+          <a
+            href="/landing"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-pink-600/25 to-purple-600/25 hover:from-pink-600/40 hover:to-purple-600/40 border border-pink-500/40 text-xs font-bold text-pink-200 transition-all shadow-sm"
+            title="مشاهده لندینگ پیج و کاراکترهای اورجینال NEXUS UNIVERSE"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-pink-300" />
+            <span>لندینگ پیج اصلی</span>
+          </a>
+
           {/* NEXUS GLYPHS Showcase link */}
           <a
             href="/glyphs"
@@ -444,7 +454,7 @@ export default function GalaxyUniverseApp() {
             title="مشاهده سامانه نشانه‌شناسی و ۲۰ آیکون جدید نکسوس"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#43C9D8]" />
-            <span>ویترین آیکون‌ها (GLYPHS)</span>
+            <span>آیکون‌ها</span>
           </a>
         </div>
 
