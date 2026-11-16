@@ -12,7 +12,7 @@ import Link from 'next/link';
 
 export default function NexusUniverseLandingPage() {
   return (
-    <div className="min-h-screen bg-[#06070d] text-slate-100 font-sans overflow-x-hidden selection:bg-purple-600 selection:text-white" dir="rtl">
+    <div className="min-h-screen bg-[#06070d] text-slate-100 font-sans selection:bg-purple-600 selection:text-white" dir="rtl">
       {/* Floating Navigation */}
       <LandingNav />
 

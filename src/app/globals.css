@@ -23,13 +23,11 @@
     font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
   }
 
-  body {
-    background-color: var(--space-void);
-    color: #f1f5f9;
-    direction: rtl;
-    text-align: right;
-    user-select: none;
-  }
+html,
+body {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
 }
 
 /* Deep Space Starfield Background */
