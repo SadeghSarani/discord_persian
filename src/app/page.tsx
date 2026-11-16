@@ -515,7 +515,7 @@ export default function GalaxyUniverseApp() {
         </div>
 
         {/* Planet List Items */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-2 no-scrollbar">
+        <div className="flex-1 overflow-y-auto p-3 space-y-2 sleek-scrollbar">
           {/* Quick Signal Radar Action Card */}
           <div
             onClick={() => setIsSignalRadarOpen(true)}

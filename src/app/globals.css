@@ -99,3 +99,70 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.5);
 }
+
+/* ==========================================================
+   CUSTOM SLEEK CYBER SCROLLBARS
+   Replaces default white/grey browser scrollbars everywhere
+   ========================================================== */
+
+/* Universal Scrollbar for modern engines */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 124, 255, 0.35) transparent;
+}
+
+/* WebKit & Chromium-based Browsers (Chrome, Edge, Safari, Brave) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #8b7cff 0%, #43c9d8 100%);
+  box-shadow: 0 0 10px rgba(139, 124, 255, 0.5);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Specific sleek scrollbar utility */
+.sleek-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 124, 255, 0.4) transparent;
+}
+
+.sleek-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sleek-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(139, 124, 255, 0.25);
+  border-radius: 9999px;
+}
+
+.sleek-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #8b7cff;
+}
+
+/* Invisible scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
