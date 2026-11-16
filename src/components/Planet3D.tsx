@@ -8,208 +8,345 @@ interface Planet3DProps {
   size: number;
   theme: 'cs2' | 'fc' | 'dota2' | 'val' | 'prime';
   hasRings?: boolean;
-  isHovered?: boolean;
 }
 
-export default function Planet3D({ size, theme, hasRings = false, isHovered = false }: Planet3DProps) {
+export default function Planet3D({ size, theme, hasRings = false }: Planet3DProps) {
   const mountRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const container = mountRef.current;
     if (!container) return;
 
-    // Set up Scene, Camera, Renderer
+    // 1. Setup Scene, Camera, High-Precision WebGL Renderer
     const width = size;
     const height = size;
     const scene = new THREE.Scene();
 
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    camera.position.z = 3.6;
+    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
+    camera.position.z = 4.2;
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.25;
     container.appendChild(renderer.domElement);
 
-    // Procedural Planet Texture Generator based on theme
-    const canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 256;
-    const ctx = canvas.getContext('2d')!;
+    // 2. High-Resolution 1024x512 Procedural Surface & Bump Maps
+    const surfCanvas = document.createElement('canvas');
+    surfCanvas.width = 1024;
+    surfCanvas.height = 512;
+    const sCtx = surfCanvas.getContext('2d')!;
+
+    const bumpCanvas = document.createElement('canvas');
+    bumpCanvas.width = 1024;
+    bumpCanvas.height = 512;
+    const bCtx = bumpCanvas.getContext('2d')!;
+
+    // Initial Base
+    bCtx.fillStyle = '#808080';
+    bCtx.fillRect(0, 0, 1024, 512);
 
     if (theme === 'cs2') {
-      // Mars / Desert / Tactical Dust texture
-      const grad = ctx.createLinearGradient(0, 0, 0, 256);
-      grad.addColorStop(0, '#78350f');
-      grad.addColorStop(0.25, '#d97706');
-      grad.addColorStop(0.5, '#f59e0b');
-      grad.addColorStop(0.75, '#b45309');
-      grad.addColorStop(1, '#451a03');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 512, 256);
+      // Photorealistic Mars / Desert Canyon planet
+      const grad = sCtx.createLinearGradient(0, 0, 0, 512);
+      grad.addColorStop(0, '#3b1807');
+      grad.addColorStop(0.2, '#853d0d');
+      grad.addColorStop(0.35, '#c25e1a');
+      grad.addColorStop(0.5, '#ea580c');
+      grad.addColorStop(0.65, '#b45309');
+      grad.addColorStop(0.85, '#78350f');
+      grad.addColorStop(1, '#291004');
+      sCtx.fillStyle = grad;
+      sCtx.fillRect(0, 0, 1024, 512);
 
-      // Craters & dust storms
-      for (let i = 0; i < 45; i++) {
-        const x = Math.random() * 512;
-        const y = Math.random() * 256;
-        const r = Math.random() * 28 + 4;
-        ctx.fillStyle = Math.random() > 0.5 ? 'rgba(69, 26, 3, 0.45)' : 'rgba(251, 191, 36, 0.4)';
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fill();
+      // Procedural Dune Ridges & Canyon Craters
+      for (let i = 0; i < 90; i++) {
+        const x = Math.random() * 1024;
+        const y = Math.random() * 512;
+        const r = Math.random() * 38 + 5;
+
+        // Shadowed craters
+        sCtx.fillStyle = 'rgba(41, 16, 4, 0.6)';
+        sCtx.beginPath();
+        sCtx.arc(x + 2, y + 2, r, 0, Math.PI * 2);
+        sCtx.fill();
+
+        // Highlight crater rim
+        sCtx.fillStyle = 'rgba(254, 215, 170, 0.5)';
+        sCtx.beginPath();
+        sCtx.arc(x, y, r * 0.85, 0, Math.PI * 2);
+        sCtx.fill();
+
+        // Bump map indentation
+        bCtx.fillStyle = '#222222';
+        bCtx.beginPath();
+        bCtx.arc(x, y, r, 0, Math.PI * 2);
+        bCtx.fill();
+        bCtx.fillStyle = '#ffffff';
+        bCtx.beginPath();
+        bCtx.arc(x - 2, y - 2, r * 0.8, 0, Math.PI * 2);
+        bCtx.fill();
       }
     } else if (theme === 'fc') {
-      // Lush Earth / Stadium Greens and Vibrant Oceans
-      const grad = ctx.createLinearGradient(0, 0, 0, 256);
-      grad.addColorStop(0, '#042f2e');
-      grad.addColorStop(0.3, '#0d9488');
-      grad.addColorStop(0.5, '#10b981');
-      grad.addColorStop(0.7, '#065f46');
-      grad.addColorStop(1, '#022c22');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 512, 256);
+      // Earth-like Ocean + Continents + Stadium Field Geometry
+      sCtx.fillStyle = '#06283d';
+      sCtx.fillRect(0, 0, 1024, 512);
 
-      // Continent patterns
-      for (let i = 0; i < 35; i++) {
-        const x = Math.random() * 512;
-        const y = Math.random() * 256;
-        const rx = Math.random() * 45 + 15;
-        const ry = Math.random() * 25 + 10;
-        ctx.fillStyle = 'rgba(52, 211, 153, 0.45)';
-        ctx.beginPath();
-        ctx.ellipse(x, y, rx, ry, Math.random() * Math.PI, 0, Math.PI * 2);
-        ctx.fill();
+      // Deep Ocean vs Shallow Coastlines
+      for (let i = 0; i < 25; i++) {
+        const x = Math.random() * 1024;
+        const y = Math.random() * 512;
+        const rx = Math.random() * 95 + 40;
+        const ry = Math.random() * 65 + 25;
+
+        // Shallow Turquoise waters
+        sCtx.fillStyle = 'rgba(20, 184, 166, 0.45)';
+        sCtx.beginPath();
+        sCtx.ellipse(x, y, rx + 15, ry + 15, 0, 0, Math.PI * 2);
+        sCtx.fill();
+
+        // Lush Emerald Landmass
+        sCtx.fillStyle = '#059669';
+        sCtx.beginPath();
+        sCtx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+        sCtx.fill();
+
+        // Mountainous peaks
+        sCtx.fillStyle = '#047857';
+        sCtx.beginPath();
+        sCtx.ellipse(x, y, rx * 0.6, ry * 0.6, 0, 0, Math.PI * 2);
+        sCtx.fill();
+
+        // Bump elevation for land
+        bCtx.fillStyle = '#cccccc';
+        bCtx.beginPath();
+        bCtx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+        bCtx.fill();
       }
     } else if (theme === 'dota2') {
-      // Lava & Volcanic Ancient Core
-      const grad = ctx.createLinearGradient(0, 0, 0, 256);
-      grad.addColorStop(0, '#450a0a');
-      grad.addColorStop(0.3, '#dc2626');
-      grad.addColorStop(0.5, '#ef4444');
-      grad.addColorStop(0.8, '#991b1b');
-      grad.addColorStop(1, '#2a0808');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 512, 256);
+      // Dark Volcanic Obsidian with Glowing Molten Magma Veins
+      sCtx.fillStyle = '#1c0707';
+      sCtx.fillRect(0, 0, 1024, 512);
 
-      // Magma cracks
-      for (let i = 0; i < 50; i++) {
-        const x = Math.random() * 512;
-        const y = Math.random() * 256;
-        const r = Math.random() * 22 + 5;
-        ctx.fillStyle = Math.random() > 0.4 ? 'rgba(254, 240, 138, 0.6)' : 'rgba(127, 29, 29, 0.6)';
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fill();
+      // Obsidian Basalt plates
+      for (let i = 0; i < 40; i++) {
+        const x = Math.random() * 1024;
+        const y = Math.random() * 512;
+        const rx = Math.random() * 70 + 20;
+        const ry = Math.random() * 45 + 15;
+        sCtx.fillStyle = '#3f0c0c';
+        sCtx.beginPath();
+        sCtx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+        sCtx.fill();
+
+        bCtx.fillStyle = '#ffffff';
+        bCtx.beginPath();
+        bCtx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+        bCtx.fill();
       }
-    } else if (theme === 'val') {
-      // Radiant Cyber & Neon Pink/Purple gas giant
-      const grad = ctx.createLinearGradient(0, 0, 0, 256);
-      grad.addColorStop(0, '#500724');
-      grad.addColorStop(0.25, '#c026d3');
-      grad.addColorStop(0.5, '#ec4899');
-      grad.addColorStop(0.75, '#831843');
-      grad.addColorStop(1, '#701a75');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 512, 256);
 
-      // Radiant energy streaks
-      for (let i = 0; i < 18; i++) {
-        const y = Math.random() * 256;
-        ctx.fillStyle = 'rgba(244, 114, 182, 0.35)';
-        ctx.fillRect(0, y, 512, Math.random() * 12 + 3);
+      // Molten Glowing Lava Rivers
+      sCtx.lineWidth = 4;
+      sCtx.strokeStyle = '#f97316';
+      sCtx.shadowColor = '#ef4444';
+      sCtx.shadowBlur = 12;
+      for (let j = 0; j < 18; j++) {
+        sCtx.beginPath();
+        let curX = Math.random() * 1024;
+        let curY = Math.random() * 512;
+        sCtx.moveTo(curX, curY);
+        for (let step = 0; step < 6; step++) {
+          curX += (Math.random() - 0.5) * 110;
+          curY += (Math.random() - 0.5) * 80;
+          sCtx.lineTo(curX, curY);
+        }
+        sCtx.stroke();
+      }
+      sCtx.shadowBlur = 0;
+    } else if (theme === 'val') {
+      // Radiant Cyber Gas Giant with Glowing Aurora Streaks
+      const grad = sCtx.createLinearGradient(0, 0, 0, 512);
+      grad.addColorStop(0, '#2e0220');
+      grad.addColorStop(0.2, '#701a75');
+      grad.addColorStop(0.4, '#c026d3');
+      grad.addColorStop(0.6, '#ec4899');
+      grad.addColorStop(0.8, '#a21caf');
+      grad.addColorStop(1, '#3b0730');
+      sCtx.fillStyle = grad;
+      sCtx.fillRect(0, 0, 1024, 512);
+
+      // Luminous storm cyclones
+      for (let i = 0; i < 30; i++) {
+        const x = Math.random() * 1024;
+        const y = Math.random() * 512;
+        sCtx.fillStyle = 'rgba(244, 114, 182, 0.4)';
+        sCtx.beginPath();
+        sCtx.arc(x, y, Math.random() * 30 + 10, 0, Math.PI * 2);
+        sCtx.fill();
       }
     } else {
-      // Nexus Prime - Interstellar Gas Giant with Violet / Cyan / Blue bands
-      const grad = ctx.createLinearGradient(0, 0, 0, 256);
-      grad.addColorStop(0, '#1e1b4b');
-      grad.addColorStop(0.25, '#6366f1');
-      grad.addColorStop(0.5, '#a855f7');
-      grad.addColorStop(0.75, '#06b6d4');
-      grad.addColorStop(1, '#0f172a');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 512, 256);
+      // Nexus Prime - Massive Jupiter-style Ringed Gas Giant
+      const grad = sCtx.createLinearGradient(0, 0, 0, 512);
+      grad.addColorStop(0, '#0f172a');
+      grad.addColorStop(0.15, '#3b0764');
+      grad.addColorStop(0.3, '#7c3aed');
+      grad.addColorStop(0.45, '#38bdf8');
+      grad.addColorStop(0.6, '#9333ea');
+      grad.addColorStop(0.75, '#0284c7');
+      grad.addColorStop(0.9, '#1e1b4b');
+      grad.addColorStop(1, '#020617');
+      sCtx.fillStyle = grad;
+      sCtx.fillRect(0, 0, 1024, 512);
 
-      // Cloud swirls
-      for (let i = 0; i < 24; i++) {
-        const y = Math.random() * 256;
-        ctx.fillStyle = Math.random() > 0.5 ? 'rgba(167, 139, 250, 0.35)' : 'rgba(34, 211, 238, 0.35)';
-        ctx.fillRect(0, y, 512, Math.random() * 14 + 4);
+      // Atmospheric Bands and Great Purple Storm Spot
+      for (let y = 0; y < 512; y += 16) {
+        sCtx.fillStyle = y % 32 === 0 ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.2)';
+        sCtx.fillRect(0, y, 1024, 8);
       }
+      // Great Red/Purple Spot
+      sCtx.fillStyle = '#a855f7';
+      sCtx.beginPath();
+      sCtx.ellipse(350, 240, 65, 38, 0, 0, Math.PI * 2);
+      sCtx.fill();
     }
 
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.ClampToEdgeWrapping;
+    const surfTexture = new THREE.CanvasTexture(surfCanvas);
+    surfTexture.wrapS = THREE.RepeatWrapping;
+    surfTexture.wrapT = THREE.ClampToEdgeWrapping;
 
-    // Create 3D Sphere Geometry
-    const geometry = new THREE.SphereGeometry(1, 48, 48);
-    const material = new THREE.MeshStandardMaterial({
-      map: texture,
-      roughness: 0.7,
-      metalness: 0.1,
+    const bumpTexture = new THREE.CanvasTexture(bumpCanvas);
+    bumpTexture.wrapS = THREE.RepeatWrapping;
+
+    // 3. Planet Mesh with Realistic Standard PBR Material
+    const planetGeometry = new THREE.SphereGeometry(1, 64, 64);
+    const planetMaterial = new THREE.MeshStandardMaterial({
+      map: surfTexture,
+      bumpMap: bumpTexture,
+      bumpScale: 0.04,
+      roughness: theme === 'fc' ? 0.45 : theme === 'dota2' ? 0.75 : 0.6,
+      metalness: theme === 'val' ? 0.25 : 0.08,
     });
-    const planetMesh = new THREE.Mesh(geometry, material);
+    const planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
     scene.add(planetMesh);
 
-    // Planet Atmospheric Glow Mesh
-    const glowGeometry = new THREE.SphereGeometry(1.04, 32, 32);
-    const glowMaterial = new THREE.MeshBasicMaterial({
-      color:
-        theme === 'cs2'
-          ? 0xf59e0b
-          : theme === 'fc'
-          ? 0x10b981
-          : theme === 'dota2'
-          ? 0xef4444
-          : theme === 'val'
-          ? 0xec4899
-          : 0xa855f7,
+    // 4. Photorealistic Cloud Layer for Earth-like / Living worlds (FC & Prime)
+    let cloudsMesh: THREE.Mesh | null = null;
+    if (theme === 'fc' || theme === 'prime') {
+      const cloudCanvas = document.createElement('canvas');
+      cloudCanvas.width = 512;
+      cloudCanvas.height = 256;
+      const cCtx = cloudCanvas.getContext('2d')!;
+      cCtx.fillStyle = '#000000';
+      cCtx.fillRect(0, 0, 512, 256);
+
+      // Fluffy white procedural clouds
+      for (let c = 0; c < 45; c++) {
+        const cx = Math.random() * 512;
+        const cy = Math.random() * 256;
+        cCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        cCtx.beginPath();
+        cCtx.arc(cx, cy, Math.random() * 32 + 10, 0, Math.PI * 2);
+        cCtx.fill();
+      }
+
+      const cloudTex = new THREE.CanvasTexture(cloudCanvas);
+      const cloudGeo = new THREE.SphereGeometry(1.025, 48, 48);
+      const cloudMat = new THREE.MeshStandardMaterial({
+        alphaMap: cloudTex,
+        transparent: true,
+        opacity: 0.55,
+        color: 0xffffff,
+        roughness: 1,
+      });
+      cloudsMesh = new THREE.Mesh(cloudGeo, cloudMat);
+      scene.add(cloudsMesh);
+    }
+
+    // 5. Soft Atmospheric Rim Lighting (No box clipping)
+    const atmosphereColor =
+      theme === 'cs2'
+        ? 0xf59e0b
+        : theme === 'fc'
+        ? 0x10b981
+        : theme === 'dota2'
+        ? 0xef4444
+        : theme === 'val'
+        ? 0xec4899
+        : 0xa855f7;
+
+    const atmosphereGeo = new THREE.SphereGeometry(1.035, 32, 32);
+    const atmosphereMat = new THREE.MeshBasicMaterial({
+      color: atmosphereColor,
       transparent: true,
-      opacity: 0.18,
+      opacity: 0.15,
       side: THREE.BackSide,
     });
-    const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial);
-    scene.add(glowMesh);
+    const atmosphereMesh = new THREE.Mesh(atmosphereGeo, atmosphereMat);
+    scene.add(atmosphereMesh);
 
-    // Saturn-like Rings (for Prime or FC)
+    // 6. Photorealistic Dense Planetary Rings
     let ringMesh: THREE.Mesh | null = null;
     if (hasRings) {
-      const ringGeo = new THREE.RingGeometry(1.25, 1.75, 64);
+      const ringCanvas = document.createElement('canvas');
+      ringCanvas.width = 256;
+      ringCanvas.height = 1;
+      const rCtx = ringCanvas.getContext('2d')!;
+      const rGrad = rCtx.createLinearGradient(0, 0, 256, 0);
+      rGrad.addColorStop(0, 'rgba(0,0,0,0)');
+      rGrad.addColorStop(0.2, theme === 'prime' ? 'rgba(34,211,238,0.7)' : 'rgba(52,211,153,0.7)');
+      rGrad.addColorStop(0.4, 'rgba(0,0,0,0.2)'); // Cassini division
+      rGrad.addColorStop(0.6, theme === 'prime' ? 'rgba(168,85,247,0.8)' : 'rgba(16,185,129,0.8)');
+      rGrad.addColorStop(0.85, theme === 'prime' ? 'rgba(129,140,248,0.5)' : 'rgba(110,231,183,0.5)');
+      rGrad.addColorStop(1, 'rgba(0,0,0,0)');
+      rCtx.fillStyle = rGrad;
+      rCtx.fillRect(0, 0, 256, 1);
+
+      const ringTex = new THREE.CanvasTexture(ringCanvas);
+      const ringGeo = new THREE.RingGeometry(1.2, 1.6, 64);
       const ringMat = new THREE.MeshStandardMaterial({
-        color: theme === 'prime' ? 0x06b6d4 : 0x10b981,
+        map: ringTex,
         side: THREE.DoubleSide,
         transparent: true,
-        opacity: 0.65,
-        roughness: 0.5,
+        roughness: 0.6,
+        depthWrite: false,
       });
       ringMesh = new THREE.Mesh(ringGeo, ringMat);
       ringMesh.rotation.x = Math.PI / 2.3;
-      ringMesh.rotation.y = Math.PI / 9;
+      ringMesh.rotation.y = Math.PI / 7;
       scene.add(ringMesh);
     }
 
-    // Dynamic Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
-    scene.add(ambientLight);
+    // 7. Space Sunlight & Soft Celestial Bounce Fill
+    const sunLight = new THREE.DirectionalLight(0xffffff, 2.2);
+    sunLight.position.set(4, 2.5, 3.5);
+    scene.add(sunLight);
 
-    const dirLight = new THREE.DirectionalLight(0xffffff, 1.4);
-    dirLight.position.set(3, 2, 3);
-    scene.add(dirLight);
+    const rimLight = new THREE.DirectionalLight(
+      theme === 'fc' ? 0x2dd4bf : theme === 'cs2' ? 0xfbbf24 : 0x818cf8,
+      0.65
+    );
+    rimLight.position.set(-4, -2, -3);
+    scene.add(rimLight);
 
-    const backlight = new THREE.DirectionalLight(0xa855f7, 0.5);
-    backlight.position.set(-3, -1, -2);
-    scene.add(backlight);
+    const spaceAmbient = new THREE.AmbientLight(0x0f172a, 0.4);
+    scene.add(spaceAmbient);
 
-    // Animation Loop
-    let animationFrameId: number;
+    // 8. Animation Loop
+    let animId: number;
     const animate = () => {
-      animationFrameId = requestAnimationFrame(animate);
+      animId = requestAnimationFrame(animate);
 
-      // Rotate planet on Y axis
-      planetMesh.rotation.y += 0.007;
+      // Planet rotation
+      planetMesh.rotation.y += 0.005;
+
+      // Cloud drift slightly faster than planet surface
+      if (cloudsMesh) {
+        cloudsMesh.rotation.y += 0.007;
+      }
 
       if (ringMesh) {
-        ringMesh.rotation.z += 0.003;
+        ringMesh.rotation.z += 0.002;
       }
 
       renderer.render(scene, camera);
@@ -217,14 +354,16 @@ export default function Planet3D({ size, theme, hasRings = false, isHovered = fa
     animate();
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      cancelAnimationFrame(animId);
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
       renderer.dispose();
-      geometry.dispose();
-      material.dispose();
-      texture.dispose();
+      planetGeometry.dispose();
+      planetMaterial.dispose();
+      surfTexture.dispose();
+      bumpTexture.dispose();
+      atmosphereMat.dispose();
     };
   }, [size, theme, hasRings]);
 
@@ -232,9 +371,7 @@ export default function Planet3D({ size, theme, hasRings = false, isHovered = fa
     <div
       ref={mountRef}
       style={{ width: `${size}px`, height: `${size}px` }}
-      className={`pointer-events-none transition-transform duration-300 ${
-        isHovered ? 'scale-110' : 'scale-100'
-      }`}
+      className="pointer-events-none transition-transform duration-300 group-hover:scale-110"
     />
   );
 }
