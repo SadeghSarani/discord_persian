@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Sparkles, Zap, ShieldCheck } from 'lucide-react';
+import { NexusIcon } from '@/components/glyphs';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 export const FinalCTA: React.FC = () => {
   return (
@@ -9,9 +10,9 @@ export const FinalCTA: React.FC = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[450px] bg-gradient-to-tr from-purple-600/30 via-pink-600/20 to-cyan-500/30 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-20">
-        {/* Core Nebula Icon */}
-        <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 flex items-center justify-center text-3xl shadow-[0_0_40px_rgba(168,85,247,0.6)] mb-6 animate-pulse">
-          🌌
+        {/* Core Vector Emblem */}
+        <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 flex items-center justify-center text-white shadow-[0_0_40px_rgba(168,85,247,0.6)] mb-6 animate-pulse">
+          <NexusIcon name="core" size={32} strokeWidth={2} />
         </div>
 
         <h2 className="text-4xl sm:text-6xl font-black text-white leading-tight mb-5">

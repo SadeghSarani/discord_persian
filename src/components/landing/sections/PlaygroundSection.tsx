@@ -1,5 +1,5 @@
 import React from 'react';
-import { Gamepad2, Trophy, Sparkles, Flame, Dice5, Swords } from 'lucide-react';
+import { NexusIcon } from '@/components/glyphs';
 
 export const PlaygroundSection: React.FC = () => {
   return (
@@ -8,7 +8,7 @@ export const PlaygroundSection: React.FC = () => {
         {/* Story Text */}
         <div className="flex-1 text-right">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-black mb-4">
-            <Gamepad2 className="w-3.5 h-3.5 text-amber-400" />
+            <NexusIcon name="playground" size={16} />
             <span>زمین بازی و سرگرمی جمعی (PLAYGROUND)</span>
           </div>
 
@@ -24,33 +24,37 @@ export const PlaygroundSection: React.FC = () => {
           </p>
 
           <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-slate-300">
-            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/[0.05] border border-white/10">
-              <Trophy className="w-4 h-4 text-amber-400" />
+            <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/[0.05] border border-white/10">
+              <NexusIcon name="xp" size={16} className="text-amber-400" />
               <span>کسب XP و لول‌آپ</span>
             </div>
-            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/[0.05] border border-white/10">
-              <Sparkles className="w-4 h-4 text-cyan-400" />
+            <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/[0.05] border border-white/10">
+              <NexusIcon name="achievements" size={16} className="text-cyan-400" />
               <span>افکت‌های جشن و هایپ زنده</span>
             </div>
           </div>
         </div>
 
-        {/* Scene Illustration: Interactive Social Mini-Games */}
+        {/* Scene Illustration: Futuristic Interactive Social Mini-Games */}
         <div className="flex-1 relative w-full h-[380px] sm:h-[440px] rounded-3xl bg-gradient-to-br from-[#191522] via-[#241a34] to-[#0d0c18] border border-amber-500/30 p-6 shadow-2xl flex flex-col items-center justify-center gap-4 overflow-hidden">
-          {/* Tic Tac Toe Board Mockup floating in space */}
+          {/* Tic Tac Toe Board Mockup with SVG vector icons */}
           <div className="relative z-20 grid grid-cols-3 gap-2.5 p-4 rounded-2xl bg-black/70 border border-white/20 backdrop-blur-xl shadow-2xl">
-            {['❌', '⭕', '❌', '⭕', '❌', '⭕', '⭕', '❌', '❌'].map((cell, idx) => (
+            {[1, 2, 1, 2, 1, 2, 2, 1, 1].map((cellType, idx) => (
               <div
                 key={idx}
-                className="w-14 h-14 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-2xl font-black text-white shadow-inner"
+                className="w-14 h-14 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center shadow-inner"
               >
-                {cell}
+                {cellType === 1 ? (
+                  <NexusIcon name="core" size={24} className="text-cyan-400" />
+                ) : (
+                  <NexusIcon name="signal" size={24} className="text-pink-400" />
+                )}
               </div>
             ))}
           </div>
 
           <div className="text-xs font-black text-amber-300 flex items-center gap-2 bg-amber-500/10 px-4 py-1.5 rounded-full border border-amber-500/20">
-            <Trophy className="w-4 h-4 text-amber-400" />
+            <NexusIcon name="level" size={16} className="text-amber-400" />
             <span>مسابقه بی‌درنگ در دل تماس صوتی</span>
           </div>
         </div>

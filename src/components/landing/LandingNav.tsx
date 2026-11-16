@@ -11,8 +11,8 @@ export const LandingNav: React.FC = () => {
       <header className="fixed top-3 sm:top-4 left-3 sm:left-6 right-3 sm:right-6 h-14 sm:h-16 rounded-2xl bg-[#090c16]/90 backdrop-blur-2xl border border-white/10 flex items-center justify-between px-4 sm:px-6 z-50 shadow-2xl select-none" dir="rtl">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 flex items-center justify-center text-white text-base sm:text-lg font-black shadow-[0_0_20px_rgba(168,85,247,0.5)] group-hover:scale-105 transition">
-            🌌
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 flex items-center justify-center text-white shadow-[0_0_20px_rgba(168,85,247,0.5)] group-hover:scale-105 transition">
+            <NexusIcon name="core" size={20} strokeWidth={2} />
           </div>
           <div>
             <div className="text-sm sm:text-base font-black text-white flex items-center gap-1.5 sm:gap-2">
