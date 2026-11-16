@@ -88,6 +88,10 @@ model User {
   // Voice/Video Presence
   voicePresence    VoiceParticipant?
 
+  // Nexus Signals
+  createdSignals   Signal[]               @relation("SignalCreator")
+  signalJoins      SignalParticipant[]    @relation("SignalJoined")
+
   // Notifications
   notifications    Notification[]
 
@@ -279,6 +283,7 @@ model Moment {
   reports          MomentReport[]
   voiceRoom        VoiceRoom?
   playgroundSessions PlaygroundSession[]
+  sourceSignal     Signal?             @relation("SignalToMoment")
 
   @@index([status, visibility, expiresAt])
   @@index([creatorId])
@@ -338,6 +343,61 @@ model MomentReport {
   createdAt  DateTime     @default(now())
 
   @@index([status, createdAt])
+}
+
+// ==========================================
+// 4.1 NEXUS SIGNAL ENGINE
+// ==========================================
+
+enum SignalStatus {
+  BROADCASTING
+  FORMED
+  CANCELLED
+  EXPIRED
+}
+
+enum SignalVisibility {
+  PUBLIC
+  FRIENDS_ONLY
+}
+
+model Signal {
+  id                String           @id @default(cuid())
+  creatorId         String
+  creator           User             @relation("SignalCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  activityCategory  String           @db.VarChar(32)
+  targetInterest    String?          @db.VarChar(64)
+  description       String           @db.VarChar(200)
+  targetCount       Int              @default(3)
+  minCount          Int              @default(2)
+  maxCapacity       Int              @default(4)
+  estimatedDuration Int              @default(20)
+  visibility        SignalVisibility @default(PUBLIC)
+  status            SignalStatus     @default(BROADCASTING)
+  expiresAt         DateTime
+  formedMomentId    String?          @unique
+  formedMoment      Moment?          @relation("SignalToMoment", fields: [formedMomentId], references: [id], onDelete: SetNull)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  participants      SignalParticipant[]
+
+  @@index([status, visibility, expiresAt])
+  @@index([activityCategory, status])
+  @@index([creatorId])
+}
+
+model SignalParticipant {
+  id        String   @id @default(cuid())
+  signalId  String
+  signal    Signal   @relation(fields: [signalId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation("SignalJoined", fields: [userId], references: [id], onDelete: Cascade)
+  joinedAt  DateTime @default(now())
+
+  @@unique([signalId, userId])
+  @@index([signalId])
+  @@index([userId])
 }
 
 // ==========================================

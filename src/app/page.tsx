@@ -42,6 +42,7 @@ import { AuthModal } from '@/components/AuthModal';
 import Planet3D from '@/components/Planet3D';
 import PrivateDMsPanel from '@/components/PrivateDMsPanel';
 import { VoiceVideoRoom } from '@/components/VoiceVideoRoom';
+import SignalRadarModal from '@/components/SignalRadarModal';
 import confetti from 'canvas-confetti';
 
 interface PlanetWorld {
@@ -203,6 +204,7 @@ export default function GalaxyUniverseApp() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isDMsOpen, setIsDMsOpen] = useState(false);
+  const [isSignalRadarOpen, setIsSignalRadarOpen] = useState(false);
   const [activeCall, setActiveCall] = useState<{
     friend?: User;
     channelName?: string;
@@ -327,8 +329,23 @@ export default function GalaxyUniverseApp() {
           </div>
         </div>
 
-        {/* Center Quick Navigation & DMs Button */}
+        {/* Center Quick Navigation, Signals & DMs Button */}
         <div className="hidden md:flex items-center gap-3">
+          {/* NEXUS SIGNAL Engine Trigger */}
+          <button
+            onClick={() => setIsSignalRadarOpen(true)}
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-cyan-600/30 to-blue-600/30 hover:from-cyan-600/50 hover:to-blue-600/50 border border-cyan-500/40 text-xs font-bold text-white transition-all shadow-md group"
+          >
+            <div className="relative">
+              <Radio className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform animate-pulse" />
+              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+            </div>
+            <span>رادار سیگنال (الان چی می‌خوای؟)</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-cyan-500/30 text-cyan-200 border border-cyan-500/40 font-mono">
+              جدید
+            </span>
+          </button>
+
           <button
             onClick={() => setIsDMsOpen(true)}
             className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600/30 to-pink-600/30 hover:from-purple-600/50 hover:to-pink-600/50 border border-purple-500/40 text-xs font-bold text-white transition-all shadow-md group"
@@ -421,6 +438,28 @@ export default function GalaxyUniverseApp() {
 
         {/* Planet List Items */}
         <div className="flex-1 overflow-y-auto p-3 space-y-2 no-scrollbar">
+          {/* Quick Signal Radar Action Card */}
+          <div
+            onClick={() => setIsSignalRadarOpen(true)}
+            className="p-3 rounded-2xl border border-cyan-500/40 bg-gradient-to-r from-cyan-500/15 via-blue-500/10 to-transparent hover:from-cyan-500/25 transition-all cursor-pointer group mb-2 shadow-lg"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <span className="text-xl">📡</span>
+                <div>
+                  <div className="text-xs font-black text-cyan-300 group-hover:text-cyan-200 flex items-center gap-1.5">
+                    <span>نکسوس سیگنال</span>
+                    <span className="text-[9px] bg-cyan-400 text-black px-1.5 py-0.2 rounded font-extrabold">LIVE</span>
+                  </div>
+                  <div className="text-[10px] text-slate-400">الان چی می‌خوای؟ پیدا کردن هم‌بازی</div>
+                </div>
+              </div>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">
+                رادار
+              </span>
+            </div>
+          </div>
+
           {/* Quick DMs access card */}
           <div
             onClick={() => setIsDMsOpen(true)}
@@ -780,6 +819,20 @@ export default function GalaxyUniverseApp() {
           <span>۹۵۴ گیمر فعال در سیارات</span>
         </div>
       </footer>
+
+      {/* NEXUS SIGNAL Intent Formation Radar Modal */}
+      <SignalRadarModal
+        isOpen={isSignalRadarOpen}
+        currentUser={activeUser}
+        onClose={() => setIsSignalRadarOpen(false)}
+        onMomentFormed={(momentId, title) => {
+          setIsSignalRadarOpen(false);
+          setActiveCall({
+            channelName: title,
+            isVideo: false,
+          });
+        }}
+      />
 
       {/* Modals & Panels */}
       {isDMsOpen && (
