@@ -1,82 +1,147 @@
 import React from 'react';
+import Link from 'next/link';
 import {
-  CutoutMimo,
-  CutoutZyro,
-  CutoutVex,
-  CutoutOrbi,
-} from '../characters';
+  Sparkles,
+  Gamepad2,
+  Radio,
+  MessageSquare,
+  Users,
+  Compass,
+  Trophy,
+  Activity,
+  Flame,
+  Zap,
+} from 'lucide-react';
 
 export const HeroUniverse: React.FC<{ className?: string }> = ({ className = '' }) => {
   return (
-    <div className={`relative w-full max-w-6xl mx-auto h-[600px] md:h-[680px] flex items-center justify-center select-none ${className}`}>
-      {/* Background Cosmic Energy Aura & Constellation */}
+    <div className={`relative w-full max-w-5xl mx-auto h-[540px] md:h-[600px] flex items-center justify-center select-none ${className}`}>
+      {/* Background Cosmic Energy Aura & Grid */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="w-[650px] h-[360px] bg-gradient-to-r from-purple-600/25 via-cyan-500/20 to-pink-500/25 rounded-full blur-[130px]" />
       </div>
 
+      {/* Futuristic Orbit Circles & Vector Constellation */}
       <svg
         viewBox="0 0 800 600"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="absolute inset-0 w-full h-full pointer-events-none opacity-40"
+        className="absolute inset-0 w-full h-full pointer-events-none opacity-45"
       >
-        <ellipse cx="400" cy="300" rx="340" ry="140" stroke="#8B5CF6" strokeWidth="1.5" strokeDasharray="6 6" />
-        <ellipse cx="400" cy="300" rx="220" ry="260" stroke="#06B6D4" strokeWidth="1" strokeDasharray="4 8" />
-        <line x1="160" y1="200" x2="380" y2="290" stroke="#C084FC" strokeWidth="1.5" strokeDasharray="3 3" />
-        <line x1="380" y1="290" x2="620" y2="220" stroke="#38BDF8" strokeWidth="1.5" strokeDasharray="3 3" />
-        <line x1="380" y1="290" x2="520" y2="480" stroke="#F43F5E" strokeWidth="1.5" strokeDasharray="3 3" />
-        <line x1="160" y1="200" x2="240" y2="460" stroke="#A78BFA" strokeWidth="1.5" strokeDasharray="3 3" />
+        <ellipse cx="400" cy="300" rx="360" ry="150" stroke="#8B5CF6" strokeWidth="1.5" strokeDasharray="6 6" />
+        <ellipse cx="400" cy="300" rx="240" ry="260" stroke="#06B6D4" strokeWidth="1" strokeDasharray="4 8" />
+        <circle cx="400" cy="300" r="160" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+
+        {/* Dynamic Telemetry Lines */}
+        <line x1="160" y1="180" x2="380" y2="290" stroke="#C084FC" strokeWidth="1.5" strokeDasharray="3 3" />
+        <line x1="380" y1="290" x2="620" y2="200" stroke="#38BDF8" strokeWidth="1.5" strokeDasharray="3 3" />
+        <line x1="380" y1="290" x2="540" y2="460" stroke="#F43F5E" strokeWidth="1.5" strokeDasharray="3 3" />
+        <line x1="160" y1="180" x2="220" y2="440" stroke="#A78BFA" strokeWidth="1.5" strokeDasharray="3 3" />
+
+        {/* Orbit Signal Nodes */}
+        <circle cx="160" cy="180" r="5" fill="#FDE047" />
+        <circle cx="620" cy="200" r="6" fill="#38BDF8" />
+        <circle cx="220" cy="440" r="5" fill="#A855F7" />
+        <circle cx="540" cy="460" r="5" fill="#F43F5E" />
       </svg>
 
-      {/* Floating Interactive Chat Bubble 1 */}
-      <div className="absolute top-8 left-2 md:left-12 z-40 p-3 rounded-2xl bg-[#090c16]/90 backdrop-blur-xl border border-white/20 shadow-xl animate-mascot-float">
-        <div className="flex items-center gap-2">
-          <span className="text-xl">🎮</span>
+      {/* Floating Holographic Social Node 1 (Gaming Lobby) */}
+      <div className="absolute top-8 left-4 md:left-12 z-30 p-4 rounded-2xl bg-[#0a0d1c]/90 backdrop-blur-2xl border border-cyan-500/30 shadow-[0_10px_30px_rgba(6,182,212,0.25)] animate-mascot-float">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center text-lg text-white shadow-md">
+            🎮
+          </div>
           <div>
-            <div className="text-xs font-bold text-white">کی پرمیر کانتر پایه‌س؟</div>
-            <div className="text-[10px] text-cyan-300">لابی صوتی ۳ از ۵ نفر • ZYRO آنلاینه</div>
+            <div className="text-xs font-black text-white flex items-center gap-1.5">
+              <span>لابی مسابقات کانتر ۲</span>
+              <span className="text-[9px] bg-cyan-400 text-black px-1.5 py-0.2 rounded font-extrabold">LIVE</span>
+            </div>
+            <div className="text-[11px] text-cyan-300 font-medium mt-0.5">۴ از ۵ بازیکن آنلاین • ویس‌روم فعال</div>
           </div>
         </div>
       </div>
 
-      {/* Floating Interactive Chat Bubble 2 */}
-      <div className="absolute bottom-12 right-2 md:right-12 z-40 p-3 rounded-2xl bg-[#090c16]/90 backdrop-blur-xl border border-white/20 shadow-xl animate-mascot-float-reverse">
-        <div className="flex items-center gap-2">
-          <span className="text-xl">✨</span>
+      {/* Floating Holographic Social Node 2 (AI Moment) */}
+      <div className="absolute top-10 right-4 md:right-12 z-30 p-4 rounded-2xl bg-[#0d091a]/90 backdrop-blur-2xl border border-purple-500/30 shadow-[0_10px_30px_rgba(139,92,246,0.25)] animate-mascot-float-reverse">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-pink-600 flex items-center justify-center text-lg text-white shadow-md">
+            ✨
+          </div>
           <div>
-            <div className="text-xs font-bold text-white">مومنت هوش مصنوعی شروع شد!</div>
-            <div className="text-[10px] text-pink-300">MIMO و VEX در حال استریم</div>
+            <div className="text-xs font-black text-white flex items-center gap-1.5">
+              <span>مومنت هوش مصنوعی و کدنویسی</span>
+              <span className="text-[9px] bg-purple-400 text-black px-1.5 py-0.2 rounded font-extrabold">مومنت داغ</span>
+            </div>
+            <div className="text-[11px] text-pink-300 font-medium mt-0.5">۳۸ خلبان در حال گفت‌وگو و استریم</div>
           </div>
         </div>
       </div>
 
-      {/* Center Social Metropolis Planet */}
-      <div className="absolute z-10 w-44 h-44 rounded-full bg-gradient-to-tr from-purple-700 via-indigo-600 to-cyan-500 shadow-[0_0_90px_rgba(139,92,246,0.65)] flex items-center justify-center border-2 border-white/30 animate-energy-bob">
-        <div className="absolute inset-2 rounded-full border border-white/20 animate-spin" style={{ animationDuration: '40s' }}>
-          <div className="w-3.5 h-3.5 rounded-full bg-cyan-300 absolute -top-1.5 left-1/2 -translate-x-1/2 shadow-[0_0_12px_#38bdf8]" />
+      {/* Floating Holographic Social Node 3 (Signal Radar Match) */}
+      <div className="absolute bottom-10 left-4 md:left-16 z-30 p-4 rounded-2xl bg-[#140b18]/90 backdrop-blur-2xl border border-pink-500/30 shadow-[0_10px_30px_rgba(244,63,94,0.25)] animate-mascot-float-reverse">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-600 to-rose-600 flex items-center justify-center text-lg text-white shadow-md">
+            📡
+          </div>
+          <div>
+            <div className="text-xs font-black text-white flex items-center gap-1.5">
+              <span>سیگنال موفق: «بحث روی گیم‌پلی»</span>
+            </div>
+            <div className="text-[11px] text-rose-300 font-medium mt-0.5">اتصال ۳ نفر در ویس‌روم موقت</div>
+          </div>
         </div>
-        <span className="text-5xl filter drop-shadow">🌌</span>
       </div>
 
-      {/* Character 1: MIMO (Upper Left - Cutout with Transparent BG & Floating Motion) */}
-      <div className="absolute top-4 left-6 md:left-16 z-30 transition-transform duration-300 hover:scale-110 cursor-pointer animate-mascot-float">
-        <CutoutMimo size={220} angle="default" />
+      {/* Floating Holographic Social Node 4 (Planet Radio) */}
+      <div className="absolute bottom-10 right-4 md:right-16 z-30 p-4 rounded-2xl bg-[#09151c]/90 backdrop-blur-2xl border border-teal-500/30 shadow-[0_10px_30px_rgba(20,184,166,0.25)] animate-mascot-float">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-600 to-emerald-600 flex items-center justify-center text-lg text-white shadow-md">
+            📻
+          </div>
+          <div>
+            <div className="text-xs font-black text-white flex items-center gap-1.5">
+              <span>رادیو لوفای سیاره سن‌آندریاس</span>
+            </div>
+            <div className="text-[11px] text-emerald-300 font-medium mt-0.5">در حال پخش زنده برای ۹۴ نفر</div>
+          </div>
+        </div>
       </div>
 
-      {/* Character 2: ZYRO (Upper Right - Cool 3/4 Perspective Gamer) */}
-      <div className="absolute top-2 right-6 md:right-20 z-30 transition-transform duration-300 hover:scale-110 cursor-pointer animate-mascot-float-reverse">
-        <CutoutZyro size={210} angle="default" />
-      </div>
+      {/* Central Interactive Nexus Quantum Core */}
+      <Link
+        href="/panel"
+        className="relative z-20 group cursor-pointer flex flex-col items-center"
+      >
+        <div className="relative w-52 h-52 rounded-full bg-gradient-to-tr from-purple-700 via-indigo-600 to-cyan-500 shadow-[0_0_100px_rgba(139,92,246,0.7)] flex items-center justify-center border-2 border-white/40 group-hover:scale-105 transition-transform duration-500 animate-energy-bob">
+          {/* Orbital Ring 1 */}
+          <div
+            className="absolute inset-2 rounded-full border border-cyan-400/40 animate-spin"
+            style={{ animationDuration: '30s' }}
+          >
+            <div className="w-3.5 h-3.5 rounded-full bg-cyan-300 absolute -top-1.5 left-1/2 -translate-x-1/2 shadow-[0_0_15px_#38bdf8]" />
+          </div>
+          {/* Orbital Ring 2 */}
+          <div
+            className="absolute inset-5 rounded-full border border-purple-400/40 animate-spin"
+            style={{ animationDuration: '20s', animationDirection: 'reverse' }}
+          >
+            <div className="w-3 h-3 rounded-full bg-pink-400 absolute -bottom-1.5 left-1/2 -translate-x-1/2 shadow-[0_0_15px_#f43f5e]" />
+          </div>
 
-      {/* Character 3: VEX (Lower Left - Fashion Pose in Action) */}
-      <div className="absolute bottom-4 left-8 md:left-28 z-30 transition-transform duration-300 hover:scale-110 cursor-pointer animate-mascot-float-reverse">
-        <CutoutVex size={230} angle="reverse" />
-      </div>
+          {/* Core Symbol */}
+          <div className="text-center">
+            <span className="text-5xl filter drop-shadow">🌌</span>
+            <div className="text-[11px] font-black text-white mt-1 group-hover:text-cyan-300 transition">
+              NEXUS CORE
+            </div>
+          </div>
+        </div>
 
-      {/* Character 4: ORBI (Lower Right - Floating Companion Robot Orbiting) */}
-      <div className="absolute bottom-6 right-8 md:right-28 z-30 transition-transform duration-300 hover:scale-110 cursor-pointer animate-mascot-float">
-        <CutoutOrbi size={190} angle="default" />
-      </div>
+        {/* Click To Enter Badge */}
+        <div className="mt-4 px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-bold text-cyan-300 shadow-lg backdrop-blur-xl group-hover:border-cyan-400 transition">
+          کلیک کنید: پرواز به کهکشان و روم‌ها 🚀
+        </div>
+      </Link>
     </div>
   );
 };

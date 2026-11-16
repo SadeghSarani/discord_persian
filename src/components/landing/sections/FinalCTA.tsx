@@ -1,12 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import {
-  CutoutMimo,
-  CutoutZyro,
-  CutoutVex,
-  CutoutOrbi,
-} from '../characters';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles, Zap, ShieldCheck } from 'lucide-react';
 
 export const FinalCTA: React.FC = () => {
   return (
@@ -15,20 +9,9 @@ export const FinalCTA: React.FC = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[450px] bg-gradient-to-tr from-purple-600/30 via-pink-600/20 to-cyan-500/30 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-20">
-        {/* Character Assembly Crest with floating animation */}
-        <div className="flex items-center justify-center -space-x-8 -space-x-reverse mb-8">
-          <div className="transform -rotate-12 hover:scale-110 transition z-10 animate-mascot-float">
-            <CutoutMimo size={145} angle="default" />
-          </div>
-          <div className="transform -translate-y-4 hover:scale-110 transition z-20 animate-mascot-float-reverse">
-            <CutoutZyro size={155} angle="default" />
-          </div>
-          <div className="transform translate-y-1 hover:scale-110 transition z-20 animate-mascot-float">
-            <CutoutVex size={165} angle="reverse" />
-          </div>
-          <div className="transform rotate-12 hover:scale-110 transition z-10 animate-mascot-float-reverse">
-            <CutoutOrbi size={135} angle="default" />
-          </div>
+        {/* Core Nebula Icon */}
+        <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 flex items-center justify-center text-3xl shadow-[0_0_40px_rgba(168,85,247,0.6)] mb-6 animate-pulse">
+          🌌
         </div>
 
         <h2 className="text-4xl sm:text-6xl font-black text-white leading-tight mb-5">
@@ -46,7 +29,7 @@ export const FinalCTA: React.FC = () => {
           href="/panel"
           className="px-10 py-5 rounded-2xl bg-gradient-to-r from-[#8B7CFF] via-[#7C3AED] to-[#43C9D8] hover:opacity-95 text-white font-black text-lg shadow-[0_0_40px_rgba(139,124,255,0.6)] transition hover:scale-105 active:scale-95 flex items-center gap-3"
         >
-          <span>بزن بریم به پنل NEXUS!</span>
+          <span>ورود به پنل و کهکشان نکسوس</span>
           <ArrowRight className="w-5 h-5 rotate-180" />
         </Link>
 
