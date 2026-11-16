@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Zyro, Mimo, Vex, Orbi } from '../characters';
+import { MimoMascotV2, ZyroMascotV2, VexMascotV2, OrbiMascotV2 } from '../characters';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
 export const FinalCTA: React.FC = () => {
@@ -10,12 +10,20 @@ export const FinalCTA: React.FC = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[450px] bg-gradient-to-tr from-purple-600/30 via-pink-600/20 to-cyan-500/30 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-20">
-        {/* Character Assembly Crest */}
-        <div className="flex items-center justify-center -space-x-8 -space-x-reverse mb-6">
-          <div className="transform -rotate-12 hover:scale-110 transition z-10"><Mimo size={90} /></div>
-          <div className="transform -translate-y-3 hover:scale-110 transition z-20"><Zyro size={120} /></div>
-          <div className="transform translate-y-1 hover:scale-110 transition z-20"><Vex size={125} /></div>
-          <div className="transform rotate-12 hover:scale-110 transition z-10"><Orbi size={95} /></div>
+        {/* Character Assembly Crest with floating animation */}
+        <div className="flex items-center justify-center -space-x-10 -space-x-reverse mb-8">
+          <div className="transform -rotate-12 hover:scale-110 transition z-10 animate-mascot-float">
+            <MimoMascotV2 size={135} expression="celebrating" pose="celebrate" />
+          </div>
+          <div className="transform -translate-y-4 hover:scale-110 transition z-20 animate-mascot-float-reverse">
+            <ZyroMascotV2 size={155} pose="victory" expression="confident" />
+          </div>
+          <div className="transform translate-y-1 hover:scale-110 transition z-20 animate-mascot-float">
+            <VexMascotV2 size={160} pose="creative" expression="proud" />
+          </div>
+          <div className="transform rotate-12 hover:scale-110 transition z-10 animate-mascot-float-reverse">
+            <OrbiMascotV2 size={140} pose="discovery" expression="excited" />
+          </div>
         </div>
 
         <h2 className="text-4xl sm:text-6xl font-black text-white leading-tight mb-5">

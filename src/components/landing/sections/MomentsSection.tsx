@@ -1,5 +1,5 @@
 import React from 'react';
-import { Zyro, Mimo } from '../characters';
+import { ZyroMascotV2, MimoMascotV2 } from '../characters';
 import { MessageSquare, Volume2, Sparkles, Flame, Check } from 'lucide-react';
 
 export const MomentsSection: React.FC = () => {
@@ -68,13 +68,13 @@ export const MomentsSection: React.FC = () => {
           </div>
 
           {/* Zyro interacting from left */}
-          <div className="absolute -left-6 bottom-4 z-30 transform hover:scale-105 transition">
-            <Zyro size={175} />
+          <div className="absolute -left-6 bottom-4 z-30 transform hover:scale-110 transition animate-mascot-float">
+            <ZyroMascotV2 size={210} pose="victory" expression="excited" />
           </div>
 
           {/* Mimo floating on top right */}
-          <div className="absolute -right-4 top-4 z-30 transform hover:scale-105 transition">
-            <Mimo size={140} />
+          <div className="absolute -right-4 top-4 z-30 transform hover:scale-110 transition animate-mascot-float-reverse">
+            <MimoMascotV2 size={190} expression="excited" pose="celebrate" />
           </div>
         </div>
       </div>

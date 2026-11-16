@@ -98,6 +98,62 @@ body {
 }
 
 /* ==========================================================
+   ODDVERSE CHARACTER MOTION & DYNAMICS
+   ========================================================== */
+
+@keyframes floatMascot {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(1.5deg);
+  }
+}
+
+@keyframes floatMascotReverse {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(-1.5deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 15px rgba(139, 124, 255, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 28px rgba(67, 201, 216, 0.55));
+  }
+}
+
+@keyframes energyBob {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-6px) scale(1.05);
+  }
+}
+
+.animate-mascot-float {
+  animation: floatMascot 5s ease-in-out infinite;
+}
+
+.animate-mascot-float-reverse {
+  animation: floatMascotReverse 6s ease-in-out infinite;
+}
+
+.animate-mascot-pulse {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+.animate-energy-bob {
+  animation: energyBob 3s ease-in-out infinite;
+}
+
+/* ==========================================================
    CUSTOM SLEEK CYBER SCROLLBARS
    Replaces default white/grey browser scrollbars everywhere
    ========================================================== */
