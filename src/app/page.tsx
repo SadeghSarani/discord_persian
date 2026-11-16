@@ -40,6 +40,8 @@ import { initialMessages, currentUser, sampleUsers } from '@/data/mockData';
 import { ProfileModal } from '@/components/ProfileModal';
 import { AuthModal } from '@/components/AuthModal';
 import Planet3D from '@/components/Planet3D';
+import PrivateDMsPanel from '@/components/PrivateDMsPanel';
+import { VoiceVideoRoom } from '@/components/VoiceVideoRoom';
 import confetti from 'canvas-confetti';
 
 interface PlanetWorld {
@@ -197,9 +199,15 @@ export default function GalaxyUniverseApp() {
   const [isMuted, setIsMuted] = useState(false);
   const [isDeafened, setIsDeafened] = useState(false);
 
-  // Modals
+  // Modals & Panels
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isDMsOpen, setIsDMsOpen] = useState(false);
+  const [activeCall, setActiveCall] = useState<{
+    friend?: User;
+    channelName?: string;
+    isVideo: boolean;
+  } | null>(null);
 
   // Chat message stream within a planet
   const [messagesMap, setMessagesMap] = useState<Record<string, Message[]>>({
@@ -319,14 +327,29 @@ export default function GalaxyUniverseApp() {
           </div>
         </div>
 
-        {/* Center Quick Guide Button */}
+        {/* Center Quick Navigation & DMs Button */}
         <div className="hidden md:flex items-center gap-3">
+          <button
+            onClick={() => setIsDMsOpen(true)}
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600/30 to-pink-600/30 hover:from-purple-600/50 hover:to-pink-600/50 border border-purple-500/40 text-xs font-bold text-white transition-all shadow-md group"
+          >
+            <div className="relative">
+              <MessageSquare className="w-4 h-4 text-pink-400 group-hover:scale-110 transition-transform" />
+              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400" />
+            </div>
+            <span>چت خصوصی، دوستان و تماس</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-pink-500/30 text-pink-200 border border-pink-500/40 font-mono">
+              {sampleUsers.length}
+            </span>
+          </button>
+
           <button
             onClick={() => setIsHelpOpen(true)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-bold text-cyan-300 transition-all shadow-sm"
           >
             <HelpCircle className="w-4 h-4" />
-            <span>راهنمای استفاده (از کجا شروع کنم؟)</span>
+            <span>راهنما (از کجا شروع کنم؟)</span>
           </button>
         </div>
 
@@ -388,6 +411,27 @@ export default function GalaxyUniverseApp() {
 
         {/* Planet List Items */}
         <div className="flex-1 overflow-y-auto p-3 space-y-2 no-scrollbar">
+          {/* Quick DMs access card */}
+          <div
+            onClick={() => setIsDMsOpen(true)}
+            className="p-3 rounded-2xl border border-pink-500/30 bg-gradient-to-r from-pink-500/10 to-purple-500/10 hover:from-pink-500/20 hover:to-purple-500/20 transition-all cursor-pointer group mb-2"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <span className="text-xl">💬</span>
+                <div>
+                  <div className="text-xs font-black text-pink-300 group-hover:text-pink-200">
+                    پیام‌های خصوصی و دوستان
+                  </div>
+                  <div className="text-[10px] text-slate-400">تماس صوتی و تصویری ۱ به ۱</div>
+                </div>
+              </div>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-300 font-bold border border-pink-500/30">
+                باز کردن
+              </span>
+            </div>
+          </div>
+
           {PLANET_WORLDS.map((planet) => {
             const isSelected = activePlanet?.id === planet.id;
 
@@ -547,7 +591,15 @@ export default function GalaxyUniverseApp() {
                       return (
                         <button
                           key={hub.id}
-                          onClick={() => setSelectedHub(hub.id)}
+                          onClick={() => {
+                            setSelectedHub(hub.id);
+                            if (hub.type === 'voice') {
+                              setActiveCall({
+                                channelName: `${activePlanet.name} - ${hub.name}`,
+                                isVideo: false,
+                              });
+                            }
+                          }}
                           className={`w-full p-2.5 rounded-xl text-right transition-all flex items-center justify-between text-xs font-bold ${
                             isSelected
                               ? 'bg-white/15 text-white border border-white/20 shadow-md'
@@ -719,7 +771,65 @@ export default function GalaxyUniverseApp() {
         </div>
       </footer>
 
-      {/* Modals */}
+      {/* Modals & Panels */}
+      {isDMsOpen && (
+        <PrivateDMsPanel
+          currentUser={activeUser}
+          friends={sampleUsers}
+          onStartCall={(friend, isVideo) => {
+            setActiveCall({
+              friend,
+              isVideo,
+            });
+            setIsDMsOpen(false);
+          }}
+          onClose={() => setIsDMsOpen(false)}
+        />
+      )}
+
+      {/* Voice / Video Call Modal */}
+      {activeCall && (
+        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex flex-col p-4 md:p-6 animate-in fade-in zoom-in-95 duration-200">
+          <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-2">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">{activeCall.isVideo ? '📹' : '🎙️'}</span>
+              <div>
+                <h3 className="text-base font-black text-white">
+                  {activeCall.friend
+                    ? `تماس ${activeCall.isVideo ? 'تصویری' : 'صوتی'} با ${activeCall.friend.name}`
+                    : activeCall.channelName || 'اتاق مکالمه صوتی'}
+                </h3>
+                <span className="text-xs text-emerald-400 font-medium">اتصال برقرار است • کیفیت HD</span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setActiveCall(null)}
+              className="px-4 py-2 rounded-xl bg-red-600/30 hover:bg-red-600 text-red-300 hover:text-white border border-red-500/40 text-xs font-bold transition-all flex items-center gap-2"
+            >
+              <X className="w-4 h-4" />
+              <span>قطع و خروج</span>
+            </button>
+          </div>
+
+          <div className="flex-1 min-h-0">
+            <VoiceVideoRoom
+              channel={{
+                id: activeCall.friend ? `call_${activeCall.friend.id}` : 'planet_voice',
+                name: activeCall.friend ? `تماس با ${activeCall.friend.name}` : activeCall.channelName || 'ویس روم',
+                type: 'voice',
+                description: 'مکالمه صوتی و تصویری نکسوس',
+              }}
+              currentUser={activeUser}
+              connectedUsers={activeCall.friend ? [activeUser, activeCall.friend] : [activeUser, ...sampleUsers.slice(0, 3)]}
+              isMuted={isMuted}
+              onToggleMute={() => setIsMuted(!isMuted)}
+              onDisconnect={() => setActiveCall(null)}
+            />
+          </div>
+        </div>
+      )}
+
       <ProfileModal
         isOpen={isProfileOpen}
         onClose={() => setIsProfileOpen(false)}
