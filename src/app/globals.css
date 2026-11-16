@@ -107,54 +107,73 @@
 
 /* Universal Scrollbar for modern engines */
 * {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(139, 124, 255, 0.35) transparent;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(139, 124, 255, 0.4) transparent !important;
 }
 
-/* WebKit & Chromium-based Browsers (Chrome, Edge, Safari, Brave) */
+/* WebKit & Chromium-based Browsers (Chrome, Edge, Safari, Brave, Opera) */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px !important;
+  height: 5px !important;
+  background-color: transparent !important;
+}
+
+::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
-  border-radius: 9999px;
+  background: transparent !important;
+  border-radius: 9999px !important;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all 0.2s ease-in-out;
+  background: rgba(139, 124, 255, 0.35) !important;
+  border-radius: 9999px !important;
+  border: none !important;
+  transition: all 0.2s ease-in-out !important;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #8b7cff 0%, #43c9d8 100%);
-  box-shadow: 0 0 10px rgba(139, 124, 255, 0.5);
+  background: linear-gradient(180deg, #8b7cff 0%, #43c9d8 100%) !important;
+  box-shadow: 0 0 10px rgba(139, 124, 255, 0.6) !important;
 }
 
 ::-webkit-scrollbar-corner {
-  background: transparent;
+  background: transparent !important;
 }
 
 /* Specific sleek scrollbar utility */
 .sleek-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(139, 124, 255, 0.4) transparent;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(139, 124, 255, 0.45) transparent !important;
 }
 
 .sleek-scrollbar::-webkit-scrollbar {
-  width: 5px;
+  width: 5px !important;
+  height: 5px !important;
+  background-color: transparent !important;
+}
+
+.sleek-scrollbar::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.sleek-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
 }
 
 .sleek-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(139, 124, 255, 0.25);
-  border-radius: 9999px;
+  background: rgba(139, 124, 255, 0.35) !important;
+  border-radius: 9999px !important;
 }
 
 .sleek-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #8b7cff;
+  background: #8b7cff !important;
 }
 
 /* Invisible scrollbar utility */
