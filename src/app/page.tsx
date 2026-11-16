@@ -32,6 +32,7 @@ import { User, Message } from '@/types/discord';
 import { initialMessages, currentUser, sampleUsers } from '@/data/mockData';
 import { ProfileModal } from '@/components/ProfileModal';
 import { AuthModal } from '@/components/AuthModal';
+import Planet3D from '@/components/Planet3D';
 import confetti from 'canvas-confetti';
 
 interface PlanetWorld {
@@ -40,6 +41,8 @@ interface PlanetWorld {
   subTitle: string;
   genre: string;
   slug: string;
+  theme: 'cs2' | 'fc' | 'dota2' | 'val' | 'prime';
+  hasRings?: boolean;
   gradient: string;
   shadowColor: string;
   accentColor: string;
@@ -65,6 +68,7 @@ const PLANET_WORLDS: PlanetWorld[] = [
     subTitle: 'Counter-Strike 2 & Tactical FPS',
     genre: 'شوتینگ تاکتیکال',
     slug: 'cs2',
+    theme: 'cs2',
     gradient: 'from-amber-600 via-orange-500 to-yellow-400',
     shadowColor: 'rgba(245, 158, 11, 0.5)',
     accentColor: '#f59e0b',
@@ -73,7 +77,7 @@ const PLANET_WORLDS: PlanetWorld[] = [
     openLobbies: 8,
     description: 'پایگاه لابی‌های کامپتیتیو، پرمیر، مچ‌های ۵v۵ و تمرین اسموک و ریتیک.',
     coordinates: { x: 22, y: 32 },
-    size: 110,
+    size: 130,
     hubs: [
       { id: 'cs-general', name: 'کانال تاکتیکال و تبادل نظر', type: 'chat', activeCount: 65 },
       { id: 'cs-lobby1', name: 'اتاق صوتی پرمیر رنک +۱۵k', type: 'voice', activeCount: 5 },
@@ -87,6 +91,8 @@ const PLANET_WORLDS: PlanetWorld[] = [
     subTitle: 'EA FC & Football Universe',
     genre: 'شبیه‌ساز فوتبال و تورنومنت',
     slug: 'fc',
+    theme: 'fc',
+    hasRings: true,
     gradient: 'from-emerald-600 via-teal-500 to-cyan-400',
     shadowColor: 'rgba(16, 185, 129, 0.5)',
     accentColor: '#10b981',
@@ -95,7 +101,7 @@ const PLANET_WORLDS: PlanetWorld[] = [
     openLobbies: 12,
     description: 'جامعه رقابت‌های آلتیمیت تیم، پرو کلابز ۱۱ نفره و تورنومنت‌های جایزه‌دار پی‌اس‌فایو و پی‌سی.',
     coordinates: { x: 74, y: 26 },
-    size: 125,
+    size: 140,
     hubs: [
       { id: 'fc-general', name: 'چت عمومی استادیوم', type: 'chat', activeCount: 92 },
       { id: 'fc-voice', name: 'ویس روم مسابقات ۱v۱ دوستانه', type: 'voice', activeCount: 14 },
@@ -109,6 +115,7 @@ const PLANET_WORLDS: PlanetWorld[] = [
     subTitle: 'Dota 2 & Strategy Realm',
     genre: 'موبا و استراتژیک',
     slug: 'dota2',
+    theme: 'dota2',
     gradient: 'from-red-600 via-rose-500 to-amber-600',
     shadowColor: 'rgba(239, 68, 68, 0.5)',
     accentColor: '#ef4444',
@@ -117,7 +124,7 @@ const PLANET_WORLDS: PlanetWorld[] = [
     openLobbies: 6,
     description: 'هماهنگی پارتی‌های رنکد، تماشای تورنومنت‌های میجر و اینترنشنال با پینگ فوق‌العاده.',
     coordinates: { x: 30, y: 72 },
-    size: 105,
+    size: 125,
     hubs: [
       { id: 'dota-chat', name: 'تالار استراتژی و پیک‌ها', type: 'chat', activeCount: 48 },
       { id: 'dota-voice', name: 'اتاق ویس لابی کاستوم ۵v۵', type: 'voice', activeCount: 10 },
@@ -130,6 +137,7 @@ const PLANET_WORLDS: PlanetWorld[] = [
     subTitle: 'Valorant & Future Tactics',
     genre: 'هیرو شوتر',
     slug: 'val',
+    theme: 'val',
     gradient: 'from-pink-600 via-fuchsia-500 to-rose-400',
     shadowColor: 'rgba(236, 72, 153, 0.5)',
     accentColor: '#ec4899',
@@ -138,7 +146,7 @@ const PLANET_WORLDS: PlanetWorld[] = [
     openLobbies: 11,
     description: 'لابی‌های پر انرژی، لاین‌آپ‌های سووا و وایپر، کلن‌وارز و کاستوم‌های ۲۴ ساعته.',
     coordinates: { x: 68, y: 74 },
-    size: 115,
+    size: 135,
     hubs: [
       { id: 'val-chat', name: 'چت رادیانت‌ها و تیم‌یابی', type: 'chat', activeCount: 77 },
       { id: 'val-voice', name: 'اسکوات ۵ نفره رنک ایمورتال', type: 'voice', activeCount: 5 },
@@ -151,6 +159,8 @@ const PLANET_WORLDS: PlanetWorld[] = [
     subTitle: 'The Central Social Metropolis',
     genre: 'چت آزاد و دورهمی عمومی',
     slug: 'prime',
+    theme: 'prime',
+    hasRings: true,
     gradient: 'from-purple-600 via-indigo-600 to-cyan-500',
     shadowColor: 'rgba(168, 85, 247, 0.6)',
     accentColor: '#a855f7',
@@ -159,7 +169,7 @@ const PLANET_WORLDS: PlanetWorld[] = [
     openLobbies: 25,
     description: 'سیاره پایتخت کل کهکشان؛ جایی برای آشنایی، گوش دادن به موسیقی اشتراکی و مینی‌گیم‌های فضایی.',
     coordinates: { x: 50, y: 50 },
-    size: 145,
+    size: 165,
     hubs: [
       { id: 'prime-chat', name: 'میدان مرکزی نکسوس', type: 'chat', activeCount: 154 },
       { id: 'prime-lounge', name: 'لاونج صوتی ۲۴/۷ و پادکست', type: 'voice', activeCount: 38 },
@@ -353,34 +363,24 @@ export default function GalaxyUniverseApp() {
               }}
               className="absolute flex flex-col items-center group cursor-pointer z-20"
             >
-              {/* Planet Celestial Sphere */}
-              <div
-                style={{
-                  width: `${planet.size}px`,
-                  height: `${planet.size}px`,
-                  boxShadow: isSelected
-                    ? `0 0 60px ${planet.shadowColor}, 0 0 100px ${planet.shadowColor}`
-                    : `0 0 35px ${planet.shadowColor}`,
-                }}
-                className={`planet-sphere bg-gradient-to-tr ${planet.gradient} flex items-center justify-center relative`}
-              >
-                {/* 3D Atmospheric Ring */}
-                <div className="absolute inset-[-6px] rounded-full border border-white/20 group-hover:border-white/50 transition-colors animate-pulse" />
-
-                {/* Planet Center Icon */}
-                <span className="text-3xl drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] filter group-hover:scale-125 transition-transform duration-300">
-                  {planet.icon}
-                </span>
+              {/* Real 3D Planet Sphere via WebGL */}
+              <div className="relative flex items-center justify-center">
+                <Planet3D
+                  id={planet.id}
+                  size={planet.size}
+                  theme={planet.theme}
+                  hasRings={planet.hasRings}
+                />
 
                 {/* Pilot Count Badge */}
-                <div className="absolute -bottom-2 px-2.5 py-0.5 rounded-full bg-black/80 backdrop-blur-md border border-white/20 text-[10px] font-bold text-white flex items-center gap-1 shadow-lg">
+                <div className="absolute -bottom-2 px-2.5 py-0.5 rounded-full bg-black/80 backdrop-blur-md border border-white/20 text-[10px] font-bold text-white flex items-center gap-1 shadow-lg pointer-events-none">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
                   <span>{planet.activePilots} پلیر</span>
                 </div>
               </div>
 
               {/* Planet Information Card Tag */}
-              <div className="mt-4 text-center transition-all group-hover:translate-y-1">
+              <div className="mt-3 text-center transition-all group-hover:translate-y-1">
                 <div className="text-sm font-extrabold text-white flex items-center gap-1.5 justify-center">
                   <span>{planet.name}</span>
                 </div>
