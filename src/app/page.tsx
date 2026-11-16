@@ -27,6 +27,13 @@ import {
   Activity,
   Layers,
   ChevronLeft,
+  MessageSquare,
+  Hash,
+  LogIn,
+  Search,
+  HelpCircle,
+  Play,
+  Flame as FireIcon,
 } from 'lucide-react';
 import { User, Message } from '@/types/discord';
 import { initialMessages, currentUser, sampleUsers } from '@/data/mockData';
@@ -50,8 +57,8 @@ interface PlanetWorld {
   activePilots: number;
   openLobbies: number;
   description: string;
-  coordinates: { x: number; y: number }; // Percentage in galaxy map
-  size: number; // in pixels
+  coordinates: { x: number; y: number };
+  size: number;
   hubs: {
     id: string;
     name: string;
@@ -63,10 +70,34 @@ interface PlanetWorld {
 
 const PLANET_WORLDS: PlanetWorld[] = [
   {
+    id: 'planet-hub',
+    name: 'سیاره مرکزی نکسوس (Nexus Prime)',
+    subTitle: 'The Central Social Metropolis',
+    genre: 'چت عمومی و دورهمی گیمرها',
+    slug: 'prime',
+    theme: 'prime',
+    hasRings: true,
+    gradient: 'from-purple-600 via-indigo-600 to-cyan-500',
+    shadowColor: 'rgba(168, 85, 247, 0.6)',
+    accentColor: '#a855f7',
+    icon: '🌌',
+    activePilots: 340,
+    openLobbies: 25,
+    description: 'پایتخت کهکشان نکسوس برای گفتگوی آزاد، آشنایی با بازیکنان، پخش موسیقی و دورهمی.',
+    coordinates: { x: 50, y: 50 },
+    size: 165,
+    hubs: [
+      { id: 'prime-chat', name: 'چت عمومی و تالار مرکزی', type: 'chat', activeCount: 154 },
+      { id: 'prime-lounge', name: 'لاونج صوتی ۲۴ ساعته', type: 'voice', activeCount: 38 },
+      { id: 'prime-games', name: 'پاد بازی‌های سریع چندنفره', type: 'tournament', activeCount: 18 },
+    ],
+    musicTrack: 'Interstellar Lo-Fi Radio (Chill)',
+  },
+  {
     id: 'planet-cs2',
     name: 'سیاره کانتر ۲ (Dust Orbit)',
     subTitle: 'Counter-Strike 2 & Tactical FPS',
-    genre: 'شوتینگ تاکتیکال',
+    genre: 'شوتینگ تاکتیکال و پرمیر',
     slug: 'cs2',
     theme: 'cs2',
     gradient: 'from-amber-600 via-orange-500 to-yellow-400',
@@ -79,9 +110,9 @@ const PLANET_WORLDS: PlanetWorld[] = [
     coordinates: { x: 22, y: 32 },
     size: 130,
     hubs: [
-      { id: 'cs-general', name: 'کانال تاکتیکال و تبادل نظر', type: 'chat', activeCount: 65 },
+      { id: 'cs-general', name: 'چت متنی و هماهنگی اسکواد', type: 'chat', activeCount: 65 },
       { id: 'cs-lobby1', name: 'اتاق صوتی پرمیر رنک +۱۵k', type: 'voice', activeCount: 5 },
-      { id: 'cs-tourney', name: 'جام هفتگی دیسکافه CS2', type: 'tournament', activeCount: 32 },
+      { id: 'cs-tourney', name: 'جام هفتگی CS2 دیسکافه', type: 'tournament', activeCount: 32 },
     ],
     musicTrack: 'Dust II Combat Radio (Live)',
   },
@@ -99,11 +130,11 @@ const PLANET_WORLDS: PlanetWorld[] = [
     icon: '⚽',
     activePilots: 189,
     openLobbies: 12,
-    description: 'جامعه رقابت‌های آلتیمیت تیم، پرو کلابز ۱۱ نفره و تورنومنت‌های جایزه‌دار پی‌اس‌فایو و پی‌سی.',
+    description: 'جامعه رقابت‌های آلتیمیت تیم، پرو کلابز ۱۱ نفره و تورنومنت‌های جایزه‌دار.',
     coordinates: { x: 74, y: 26 },
     size: 140,
     hubs: [
-      { id: 'fc-general', name: 'چت عمومی استادیوم', type: 'chat', activeCount: 92 },
+      { id: 'fc-general', name: 'چت عمومی استادیوم و کری‌خوانی', type: 'chat', activeCount: 92 },
       { id: 'fc-voice', name: 'ویس روم مسابقات ۱v۱ دوستانه', type: 'voice', activeCount: 14 },
       { id: 'fc-proclubs', name: 'باشگاه رسمی پرو کلابز ایرانیان', type: 'tournament', activeCount: 22 },
     ],
@@ -122,7 +153,7 @@ const PLANET_WORLDS: PlanetWorld[] = [
     icon: '⚔️',
     activePilots: 115,
     openLobbies: 6,
-    description: 'هماهنگی پارتی‌های رنکد، تماشای تورنومنت‌های میجر و اینترنشنال با پینگ فوق‌العاده.',
+    description: 'هماهنگی پارتی‌های رنکد، تماشای مسابقات و آموزش هیروها.',
     coordinates: { x: 30, y: 72 },
     size: 125,
     hubs: [
@@ -135,7 +166,7 @@ const PLANET_WORLDS: PlanetWorld[] = [
     id: 'planet-valorant',
     name: 'سیاره والورانت (Radiant Haven)',
     subTitle: 'Valorant & Future Tactics',
-    genre: 'هیرو شوتر',
+    genre: 'هیرو شوتر و تاکتیکال',
     slug: 'val',
     theme: 'val',
     gradient: 'from-pink-600 via-fuchsia-500 to-rose-400',
@@ -144,7 +175,7 @@ const PLANET_WORLDS: PlanetWorld[] = [
     icon: '🎯',
     activePilots: 168,
     openLobbies: 11,
-    description: 'لابی‌های پر انرژی، لاین‌آپ‌های سووا و وایپر، کلن‌وارز و کاستوم‌های ۲۴ ساعته.',
+    description: 'لابی‌های والورانت، لاین‌آپ‌ها، کلن‌وارز و کاستوم‌های ۲۴ ساعته.',
     coordinates: { x: 68, y: 74 },
     size: 135,
     hubs: [
@@ -153,30 +184,6 @@ const PLANET_WORLDS: PlanetWorld[] = [
     ],
     musicTrack: 'VCT Champions Tokyo Synth',
   },
-  {
-    id: 'planet-hub',
-    name: 'سیاره مرکزی نکسوس (Nexus Prime)',
-    subTitle: 'The Central Social Metropolis',
-    genre: 'چت آزاد و دورهمی عمومی',
-    slug: 'prime',
-    theme: 'prime',
-    hasRings: true,
-    gradient: 'from-purple-600 via-indigo-600 to-cyan-500',
-    shadowColor: 'rgba(168, 85, 247, 0.6)',
-    accentColor: '#a855f7',
-    icon: '🌌',
-    activePilots: 340,
-    openLobbies: 25,
-    description: 'سیاره پایتخت کل کهکشان؛ جایی برای آشنایی، گوش دادن به موسیقی اشتراکی و مینی‌گیم‌های فضایی.',
-    coordinates: { x: 50, y: 50 },
-    size: 165,
-    hubs: [
-      { id: 'prime-chat', name: 'میدان مرکزی نکسوس', type: 'chat', activeCount: 154 },
-      { id: 'prime-lounge', name: 'لاونج صوتی ۲۴/۷ و پادکست', type: 'voice', activeCount: 38 },
-      { id: 'prime-games', name: 'پاد بازی‌های چندنفره سریع', type: 'tournament', activeCount: 18 },
-    ],
-    musicTrack: 'Interstellar Lo-Fi Radio (Chill)',
-  },
 ];
 
 export default function GalaxyUniverseApp() {
@@ -184,18 +191,47 @@ export default function GalaxyUniverseApp() {
   const [selectedHub, setSelectedHub] = useState<string>('prime-chat');
   const [activeUser, setActiveUser] = useState<User>(currentUser);
   const [isCopied, setIsCopied] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   // Audio / Mic
   const [isMuted, setIsMuted] = useState(false);
   const [isDeafened, setIsDeafened] = useState(false);
-  const [isPlayingAudio, setIsPlayingAudio] = useState(true);
 
   // Modals
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
   // Chat message stream within a planet
-  const [messages, setMessages] = useState<Message[]>(initialMessages['ch_1'] || []);
+  const [messagesMap, setMessagesMap] = useState<Record<string, Message[]>>({
+    'prime-chat': initialMessages['ch_1'] || [],
+    'cs-general': [
+      {
+        id: 'msg_cs_1',
+        userId: 'user_2',
+        userName: 'ساشا اسموکر',
+        userAvatarStyle: 'cyber_neon',
+        role: 'پرمیر پلیر',
+        roleColor: '#f59e0b',
+        content: 'سلام رفقا! برای لابی پرمیر ۲ نفر رنک ۱۶k به بالا نیاز داریم، کی پایه‌س؟ 💣',
+        timestamp: '۱۱:۱۰',
+        reactions: [{ emoji: '🔥', count: 3, users: [] }],
+      },
+    ],
+    'fc-general': [
+      {
+        id: 'msg_fc_1',
+        userId: 'user_3',
+        userName: 'آرش گلزن',
+        userAvatarStyle: 'matrix_hacker',
+        role: 'کاپیتان پروکلابز',
+        roleColor: '#10b981',
+        content: 'تورنومنت آخر هفته FC27 ساعت ۸ شب برگزار می‌شه. ثبت‌نام تو بخش استادیوم بازه! ⚽',
+        timestamp: '۱۱:۱۲',
+        reactions: [{ emoji: '🏆', count: 5, users: [] }],
+      },
+    ],
+  });
+
   const [chatInput, setChatInput] = useState('');
   const chatEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -221,8 +257,8 @@ export default function GalaxyUniverseApp() {
     setSelectedHub(planet.hubs[0]?.id || '');
     window.location.hash = planet.slug;
     confetti({
-      particleCount: 40,
-      spread: 60,
+      particleCount: 30,
+      spread: 50,
       origin: { x: planet.coordinates.x / 100, y: planet.coordinates.y / 100 },
     });
   };
@@ -237,7 +273,7 @@ export default function GalaxyUniverseApp() {
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!chatInput.trim()) return;
+    if (!chatInput.trim() || !activePlanet) return;
 
     const newMsg: Message = {
       id: `msg_${Date.now()}`,
@@ -245,7 +281,7 @@ export default function GalaxyUniverseApp() {
       userName: activeUser.name,
       userAvatarStyle: activeUser.avatarStyle,
       role: activeUser.role,
-      roleColor: activePlanet?.accentColor || '#a855f7',
+      roleColor: activePlanet.accentColor,
       content: chatInput.trim(),
       timestamp: new Date().toLocaleTimeString('fa-IR', {
         hour: '2-digit',
@@ -254,63 +290,55 @@ export default function GalaxyUniverseApp() {
       reactions: [],
     };
 
-    setMessages((prev) => [...prev, newMsg]);
+    setMessagesMap((prev) => ({
+      ...prev,
+      [selectedHub]: [...(prev[selectedHub] || []), newMsg],
+    }));
     setChatInput('');
     setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
   };
 
+  const currentMessages = messagesMap[selectedHub] || [];
+
   return (
     <div className="relative w-screen h-screen overflow-hidden deep-space-stars text-slate-100 select-none" dir="rtl">
-      {/* 2. Top Galaxy Command Deck */}
-      <header className="absolute top-4 left-6 right-6 h-14 rounded-2xl bg-[#090c16]/80 backdrop-blur-2xl border border-white/10 flex items-center justify-between px-6 z-50 shadow-2xl">
+      {/* 1. Top Galaxy Command Deck */}
+      <header className="absolute top-4 left-6 right-6 h-14 rounded-2xl bg-[#090c16]/85 backdrop-blur-2xl border border-white/10 flex items-center justify-between px-6 z-50 shadow-2xl">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 flex items-center justify-center text-white text-base font-black shadow-[0_0_20px_rgba(168,85,247,0.5)]">
             🌌
           </div>
           <div>
             <div className="text-sm font-black text-white flex items-center gap-2">
-              <span>کهکشان گیمینگ نکسوس</span>
+              <span>کهکشان نکسوس</span>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                Nexus Multiverse v3.0
+                Nexus Universe v3.2
               </span>
             </div>
-            <p className="text-[10px] text-slate-400">
-              سیاره بازی خود را انتخاب کنید یا از لینک مستقیم وارد شوید
-            </p>
+            <p className="text-[10px] text-slate-400">شبکه چت و دورهمی گیمرها بر اساس سیاره‌های بازی</p>
           </div>
         </div>
 
-        {/* Galaxy quick switcher pills */}
-        <div className="hidden lg:flex items-center gap-2 bg-white/5 p-1 rounded-xl border border-white/5">
-          {PLANET_WORLDS.map((planet) => {
-            const isSelected = activePlanet?.id === planet.id;
-            return (
-              <button
-                key={planet.id}
-                onClick={() => handleSelectPlanet(planet)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                  isSelected
-                    ? 'bg-white/15 text-white shadow-sm border border-white/20'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5'
-                }`}
-              >
-                <span>{planet.icon}</span>
-                <span>{planet.name.split(' ')[1]}</span>
-              </button>
-            );
-          })}
+        {/* Center Quick Guide Button */}
+        <div className="hidden md:flex items-center gap-3">
+          <button
+            onClick={() => setIsHelpOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-xs font-bold text-cyan-300 transition-all shadow-sm"
+          >
+            <HelpCircle className="w-4 h-4" />
+            <span>راهنمای استفاده (از کجا شروع کنم؟)</span>
+          </button>
         </div>
 
-        {/* User Status Bar */}
+        {/* User Identity & Audio Controls */}
         <div className="flex items-center gap-3">
-          {/* Audio Controls */}
           <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-white/5 border border-white/10">
             <button
               onClick={() => setIsMuted(!isMuted)}
               className={`p-1.5 rounded-lg transition-colors ${
                 isMuted ? 'bg-red-500/20 text-red-400' : 'text-slate-300 hover:text-white'
               }`}
-              title={isMuted ? 'میکروفون قطع' : 'میکروفون وصل'}
+              title={isMuted ? 'میکروفون قطع است' : 'قطع میکروفون'}
             >
               {isMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
             </button>
@@ -319,13 +347,12 @@ export default function GalaxyUniverseApp() {
               className={`p-1.5 rounded-lg transition-colors ${
                 isDeafened ? 'bg-red-500/20 text-red-400' : 'text-slate-300 hover:text-white'
               }`}
-              title={isDeafened ? 'صدا قطع' : 'صدا وصل'}
+              title={isDeafened ? 'صدا قطع است' : 'قطع صدا'}
             >
               <Headphones className="w-4 h-4" />
             </button>
           </div>
 
-          {/* User Profile */}
           <div
             onClick={() => setIsProfileOpen(true)}
             className="flex items-center gap-2 p-1 pl-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 cursor-pointer transition-all"
@@ -335,23 +362,82 @@ export default function GalaxyUniverseApp() {
             </div>
             <div className="text-right hidden sm:block">
               <div className="text-xs font-bold text-white leading-tight">{activeUser.name}</div>
-              <div className="text-[10px] text-emerald-400 font-medium">خلبان آماده پرواز</div>
+              <div className="text-[10px] text-emerald-400 font-medium">خلبان آنلاین</div>
             </div>
           </div>
         </div>
       </header>
 
-      {/* 3. The Main Galaxy Celestial Map (View from Space) */}
+      {/* 2. Clear Left Sidebar Directory ("سیارات و روم‌های چت") */}
+      <aside className="absolute right-6 top-24 bottom-16 w-80 rounded-3xl bg-[#090c16]/85 backdrop-blur-2xl border border-white/10 z-30 flex flex-col overflow-hidden shadow-2xl">
+        {/* Panel Header */}
+        <div className="p-4 border-b border-white/10 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <MessageSquare className="w-4 h-4 text-purple-400" />
+            <h3 className="text-xs font-black text-white">سیارات چت و روم‌های فعال</h3>
+          </div>
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-300 font-bold border border-purple-500/20">
+            ۵ سیاره
+          </span>
+        </div>
+
+        {/* Explanatory Banner for Users */}
+        <div className="p-3 mx-3 my-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-[11px] text-cyan-200 leading-relaxed font-medium">
+          💡 <strong>راهنما:</strong> روی هر سیاره کلیک کنید تا وارد چت، ویس‌روم‌ها و تیم‌های همان بازی شوید.
+        </div>
+
+        {/* Planet List Items */}
+        <div className="flex-1 overflow-y-auto p-3 space-y-2 no-scrollbar">
+          {PLANET_WORLDS.map((planet) => {
+            const isSelected = activePlanet?.id === planet.id;
+
+            return (
+              <div
+                key={planet.id}
+                onClick={() => handleSelectPlanet(planet)}
+                className={`p-3 rounded-2xl border transition-all cursor-pointer group ${
+                  isSelected
+                    ? 'bg-white/15 border-white/30 shadow-lg scale-[1.02]'
+                    : 'bg-white/[0.03] hover:bg-white/[0.08] border-white/5'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-2xl filter drop-shadow">{planet.icon}</span>
+                    <div>
+                      <div className="text-xs font-black text-white group-hover:text-cyan-300 transition-colors">
+                        {planet.name.split('(')[0]}
+                      </div>
+                      <div className="text-[10px] text-slate-400 font-medium">{planet.genre}</div>
+                    </div>
+                  </div>
+
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-black/60 text-emerald-400 font-bold border border-white/10 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    {planet.activePilots}
+                  </span>
+                </div>
+
+                {/* Sub-hubs quick view */}
+                <div className="flex items-center gap-1.5 mt-2 pt-2 border-t border-white/5 text-[10px] text-slate-400">
+                  <span className="text-purple-400 font-bold">ورود به چت و ویس</span>
+                  <ChevronLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </aside>
+
+      {/* 3. The 3D Orbital Canvas (Center) */}
       <main className="relative w-full h-full flex items-center justify-center">
         {/* Orbital Trajectory Circles in Space */}
-        <div className="orbit-ring w-[400px] h-[400px] top-1/2 left-1/2" />
+        <div className="orbit-ring w-[380px] h-[380px] top-1/2 left-1/2" />
         <div className="orbit-ring w-[650px] h-[650px] top-1/2 left-1/2" style={{ animationDuration: '200s' }} />
         <div className="orbit-ring w-[950px] h-[950px] top-1/2 left-1/2" style={{ animationDuration: '320s' }} />
 
         {/* Orbiting 3D Planet Nodes */}
         {PLANET_WORLDS.map((planet) => {
-          const isSelected = activePlanet?.id === planet.id;
-
           return (
             <div
               key={planet.id}
@@ -373,7 +459,7 @@ export default function GalaxyUniverseApp() {
                 />
 
                 {/* Pilot Count Badge */}
-                <div className="absolute -bottom-2 px-2.5 py-0.5 rounded-full bg-black/80 backdrop-blur-md border border-white/20 text-[10px] font-bold text-white flex items-center gap-1 shadow-lg pointer-events-none">
+                <div className="absolute -bottom-2 px-2.5 py-0.5 rounded-full bg-black/85 backdrop-blur-md border border-white/20 text-[10px] font-bold text-white flex items-center gap-1 shadow-lg pointer-events-none">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
                   <span>{planet.activePilots} پلیر</span>
                 </div>
@@ -386,15 +472,10 @@ export default function GalaxyUniverseApp() {
                 </div>
                 <div className="text-[11px] text-slate-400 font-medium">{planet.genre}</div>
 
-                {/* Direct Link Share Pill */}
-                <button
-                  onClick={(e) => handleCopyPlanetLink(planet, e)}
-                  className="mt-2 opacity-0 group-hover:opacity-100 px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-[10px] text-slate-200 font-bold transition-all flex items-center gap-1 mx-auto"
-                  title="کپی لینک مستقیم ورود به این سیاره"
-                >
-                  <LinkIcon className="w-3 h-3 text-cyan-400" />
-                  <span>کپی لینک سیاره</span>
-                </button>
+                {/* Direct Action Pill */}
+                <div className="mt-1.5 px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-500/30 text-[10px] text-cyan-300 font-bold group-hover:bg-cyan-500/30 transition-all">
+                  کلیک برای ورود به چت
+                </div>
               </div>
             </div>
           );
@@ -431,9 +512,10 @@ export default function GalaxyUniverseApp() {
                 <button
                   onClick={(e) => handleCopyPlanetLink(activePlanet, e)}
                   className="px-4 py-2 rounded-xl bg-black/40 hover:bg-black/60 text-white text-xs font-bold border border-white/25 flex items-center gap-1.5 transition-all shadow-md"
+                  title="کپی لینک اختصاصی این سیاره برای دعوت دوستان"
                 >
                   {isCopied ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4 text-cyan-300" />}
-                  <span>{isCopied ? 'لینک کپی شد!' : 'اشتراک لینک سیاره'}</span>
+                  <span>{isCopied ? 'لینک کپی شد!' : 'لینک اختصاصی سیاره'}</span>
                 </button>
 
                 <button
@@ -442,6 +524,7 @@ export default function GalaxyUniverseApp() {
                     window.location.hash = '';
                   }}
                   className="w-10 h-10 rounded-xl bg-black/40 hover:bg-black/60 text-white flex items-center justify-center transition-all border border-white/25"
+                  title="بازگشت به نقشه کهکشان"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -453,8 +536,9 @@ export default function GalaxyUniverseApp() {
               {/* Hub / Station Selector Sidebar */}
               <aside className="w-64 bg-black/40 border-l border-white/10 p-4 flex flex-col justify-between">
                 <div>
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">
-                    ایستگاه‌های فعال این سیاره
+                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-3 px-1 flex items-center gap-1.5">
+                    <Hash className="w-3.5 h-3.5 text-purple-400" />
+                    <span>کانال‌ها و ایستگاه‌ها</span>
                   </div>
 
                   <div className="space-y-1.5">
@@ -476,7 +560,7 @@ export default function GalaxyUniverseApp() {
                             ) : hub.type === 'tournament' ? (
                               <Gamepad2 className="w-4 h-4 text-amber-400 shrink-0" />
                             ) : (
-                              <Radio className="w-4 h-4 text-purple-400 shrink-0" />
+                              <MessageSquare className="w-4 h-4 text-purple-400 shrink-0" />
                             )}
                             <span className="truncate">{hub.name}</span>
                           </div>
@@ -493,7 +577,7 @@ export default function GalaxyUniverseApp() {
                 <div className="p-3 rounded-xl bg-white/[0.04] border border-white/10">
                   <div className="text-[10px] text-cyan-400 font-bold mb-1 flex items-center gap-1">
                     <Radio className="w-3.5 h-3.5 animate-pulse" />
-                    <span>رادیوی اختصاصی سیاره</span>
+                    <span>رادیوی زنده سیاره</span>
                   </div>
                   <div className="text-xs font-bold text-white truncate">{activePlanet.musicTrack}</div>
                 </div>
@@ -512,7 +596,7 @@ export default function GalaxyUniverseApp() {
                     </p>
                   </div>
 
-                  {messages.map((msg) => (
+                  {currentMessages.map((msg) => (
                     <div key={msg.id} className="flex items-start gap-3 group">
                       <div
                         style={{ backgroundColor: activePlanet.accentColor }}
@@ -566,21 +650,72 @@ export default function GalaxyUniverseApp() {
         </div>
       )}
 
-      {/* 5. Bottom Galaxy Flight Status */}
+      {/* 5. Quick Help Modal (از کجا شروع کنم؟) */}
+      {isHelpOpen && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-[#0e1220] w-full max-w-lg rounded-3xl border border-white/15 p-6 shadow-2xl">
+            <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">🧭</span>
+                <h3 className="text-base font-black text-white">راهنمای کهکشان نکسوس</h3>
+              </div>
+              <button
+                onClick={() => setIsHelpOpen(false)}
+                className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs leading-relaxed text-slate-300">
+              <div className="p-3 rounded-2xl bg-purple-500/10 border border-purple-500/20">
+                <div className="font-bold text-purple-300 mb-1 flex items-center gap-1.5">
+                  <span>۱. انتخاب سیاره بازی</span>
+                </div>
+                <p>
+                  هر بازی (کانتر ۲، FC 27، والورانت، دوتا ۲ یا هاب مرکزی) یک سیاره اختصاصی دارد. روی کره سه‌بعدی هر سیاره یا از ستون سمت راست روی نام آن کلیک کنید.
+                </p>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-cyan-500/10 border border-cyan-500/20">
+                <div className="font-bold text-cyan-300 mb-1 flex items-center gap-1.5">
+                  <span>۲. چت، ویس‌روم و پیدا کردن هم‌تیمی</span>
+                </div>
+                <p>
+                  با ورود به هر سیاره، تالار گفتگوی متنی، اتاق‌های صوتی و لابی‌های مسابقات اختصاصی آن بازی در اختیار شما قرار می‌گیرد.
+                </p>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
+                <div className="font-bold text-emerald-300 mb-1 flex items-center gap-1.5">
+                  <span>۳. لینک مستقیم و دعوت دوستان</span>
+                </div>
+                <p>
+                  هر سیاره لینک مستقیم دارد (مثل <code>/#cs2</code> یا <code>/#fc</code>). دکمه «لینک اختصاصی سیاره» را بزنید و برای دوستانتان بفرستید تا سریعاً در همان بازی به شما ملحق شوند.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setIsHelpOpen(false)}
+              className="mt-6 w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold transition-all text-xs"
+            >
+              متوجه شدم، بزن بریم!
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 6. Bottom Galaxy Status */}
       <footer className="absolute bottom-4 left-1/2 -translate-x-1/2 px-6 py-2 rounded-2xl bg-[#090c16]/80 backdrop-blur-2xl border border-white/10 flex items-center gap-6 z-30 text-xs shadow-2xl">
         <div className="flex items-center gap-2 text-slate-400">
           <Activity className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
-          <span>ارتباط کیهانی: آنلاین (پینگ ۱۸ms)</span>
-        </div>
-        <div className="w-[1px] h-3 bg-white/10" />
-        <div className="flex items-center gap-2 text-slate-400">
-          <Globe2 className="w-3.5 h-3.5 text-cyan-400" />
-          <span>۵ سیاره فعال در مدار</span>
+          <span>پینگ مدار: ۱۸ms</span>
         </div>
         <div className="w-[1px] h-3 bg-white/10" />
         <div className="flex items-center gap-2 text-slate-400">
           <Users className="w-3.5 h-3.5 text-purple-400" />
-          <span>۹۵۴ گیمر در کهکشان</span>
+          <span>۹۵۴ گیمر فعال در سیارات</span>
         </div>
       </footer>
 
