@@ -56,6 +56,33 @@ export default function GalaxyUniverseApp() {
   const [activePlanet, setActivePlanet] = useState<PlanetWorld | null>(null);
   const [selectedHub, setSelectedHub] = useState<string>('prime-chat');
   const [activeUser, setActiveUser] = useState<User>(currentUser);
+  // 1. Session Persistence: Check active cookie session on mount or refresh
+  useEffect(() => {
+    async function restoreSession() {
+      try {
+        const res = await fetch('/api/v1/auth/me');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user) {
+            setActiveUser({
+              id: data.user.id,
+              name: data.user.name,
+              username: data.user.username,
+              avatarStyle: data.user.avatarStyle || 'golden_king',
+              status: 'online',
+              customStatus: data.user.customStatus || 'خلبان رسمی کهکشان نکسوس 🌌',
+              role: data.user.role || 'عضو نکسوس',
+              roleColor: data.user.roleColor || '#8B7CFF',
+            });
+          }
+        }
+      } catch (err) {
+        console.error('Session validation error:', err);
+      }
+    }
+    restoreSession();
+  }, []);
+
   const [isCopied, setIsCopied] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
@@ -92,36 +119,8 @@ export default function GalaxyUniverseApp() {
     isVideo: boolean;
   } | null>(null);
 
-  // Chat message stream within a planet
-  const [messagesMap, setMessagesMap] = useState<Record<string, Message[]>>({
-    'prime-chat': initialMessages['ch_1'] || [],
-    'cs-general': [
-      {
-        id: 'msg_cs_1',
-        userId: 'user_2',
-        userName: 'ساشا اسموکر',
-        userAvatarStyle: 'cyber_neon',
-        role: 'پرمیر پلیر',
-        roleColor: '#f59e0b',
-        content: 'سلام رفقا! برای لابی پرمیر ۲ نفر رنک ۱۶k به بالا نیاز داریم، کی پایه‌س؟ 💣',
-        timestamp: '۱۱:۱۰',
-        reactions: [{ emoji: '🔥', count: 3, users: [] }],
-      },
-    ],
-    'fc-general': [
-      {
-        id: 'msg_fc_1',
-        userId: 'user_3',
-        userName: 'آرش گلزن',
-        userAvatarStyle: 'matrix_hacker',
-        role: 'کاپیتان پروکلابز',
-        roleColor: '#10b981',
-        content: 'تورنومنت آخر هفته FC27 ساعت ۸ شب برگزار می‌شه. ثبت‌نام تو بخش استادیوم بازه! ⚽',
-        timestamp: '۱۱:۱۲',
-        reactions: [{ emoji: '🏆', count: 5, users: [] }],
-      },
-    ],
-  });
+  // Chat message stream within a planet (starts empty for real user messages)
+  const [messagesMap, setMessagesMap] = useState<Record<string, Message[]>>({});
 
   const [chatInput, setChatInput] = useState('');
   const chatEndRef = useRef<HTMLDivElement | null>(null);
