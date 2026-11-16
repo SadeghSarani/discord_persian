@@ -1,10 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  OfficialMimo,
-  OfficialZyro,
-  OfficialVex,
-  OfficialOrbi,
+  CutoutMimo,
+  CutoutZyro,
+  CutoutVex,
+  CutoutOrbi,
 } from '../characters';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
@@ -18,16 +18,16 @@ export const FinalCTA: React.FC = () => {
         {/* Character Assembly Crest with floating animation */}
         <div className="flex items-center justify-center -space-x-8 -space-x-reverse mb-8">
           <div className="transform -rotate-12 hover:scale-110 transition z-10 animate-mascot-float">
-            <OfficialMimo size={145} />
+            <CutoutMimo size={145} angle="default" />
           </div>
           <div className="transform -translate-y-4 hover:scale-110 transition z-20 animate-mascot-float-reverse">
-            <OfficialZyro size={165} />
+            <CutoutZyro size={155} angle="default" />
           </div>
           <div className="transform translate-y-1 hover:scale-110 transition z-20 animate-mascot-float">
-            <OfficialVex size={175} />
+            <CutoutVex size={165} angle="reverse" />
           </div>
           <div className="transform rotate-12 hover:scale-110 transition z-10 animate-mascot-float-reverse">
-            <OfficialOrbi size={140} />
+            <CutoutOrbi size={135} angle="default" />
           </div>
         </div>
 

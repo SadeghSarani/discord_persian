@@ -1,5 +1,5 @@
 import React from 'react';
-import { OfficialVex, OfficialMimo } from '../characters';
+import { CutoutVex, CutoutMimo } from '../characters';
 import { Compass, Users, Globe2, ShieldCheck } from 'lucide-react';
 
 export const CommunitiesSection: React.FC = () => {
@@ -52,12 +52,12 @@ export const CommunitiesSection: React.FC = () => {
 
           {/* Vex Character center right */}
           <div className="absolute right-8 top-4 z-30 transition-transform duration-300 hover:scale-110 animate-mascot-float">
-            <OfficialVex size={210} />
+            <CutoutVex size={210} angle="reverse" />
           </div>
 
           {/* Mimo Character exploring from bottom left */}
           <div className="absolute left-6 bottom-4 z-30 transition-transform duration-300 hover:scale-110 animate-mascot-float-reverse">
-            <OfficialMimo size={190} />
+            <CutoutMimo size={190} angle="avatar" />
           </div>
         </div>
       </div>

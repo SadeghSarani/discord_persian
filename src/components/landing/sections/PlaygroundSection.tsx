@@ -1,5 +1,5 @@
 import React from 'react';
-import { OfficialZyro, OfficialOrbi } from '../characters';
+import { CutoutZyro, CutoutOrbi } from '../characters';
 import { Gamepad2, Trophy, Sparkles, Flame } from 'lucide-react';
 
 export const PlaygroundSection: React.FC = () => {
@@ -52,12 +52,12 @@ export const PlaygroundSection: React.FC = () => {
 
           {/* Zyro Enthusiastic Jumper */}
           <div className="absolute -left-2 top-2 z-30 transition-transform duration-300 hover:scale-110 animate-mascot-float">
-            <OfficialZyro size={210} />
+            <CutoutZyro size={210} angle="reverse" />
           </div>
 
           {/* Orbi Drone floating with Trophy */}
           <div className="absolute right-4 bottom-4 z-30 transition-transform duration-300 hover:scale-110 animate-mascot-float-reverse">
-            <OfficialOrbi size={185} />
+            <CutoutOrbi size={185} angle="avatar" />
           </div>
         </div>
       </div>
