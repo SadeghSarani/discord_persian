@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     const message = error.message || 'REGISTRATION_FAILED';
     const status =
       message.includes('ALREADY_EXISTS') ? 409 :
-      message.includes('INVALID') || message.includes('SHORT') ? 400 : 500;
+      message.includes('INVALID') || message.includes('SHORT') || message.includes('RESERVED') ? 400 : 500;
 
     return NextResponse.json({ error: message }, { status });
   }

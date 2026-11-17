@@ -66,6 +66,12 @@ export class AuthService {
     const email = dto.email.trim().toLowerCase();
     const name = dto.name.trim();
 
+    // Reserved usernames protection
+    const RESERVED_USERNAMES = ['admin', 'administrator', 'root', 'support', 'moderator', 'system', 'nexus'];
+    if (RESERVED_USERNAMES.includes(username)) {
+      throw new Error('USERNAME_RESERVED');
+    }
+
     // Validation
     if (!/^[a-z0-9_]{3,32}$/.test(username)) {
       throw new Error('INVALID_USERNAME_FORMAT');

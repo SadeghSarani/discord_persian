@@ -5,7 +5,8 @@ import { getSessionCookieOptions } from '@/modules/auth/utils/crypto';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { identifier, password } = body;
+    const identifier = body.identifier?.trim();
+    const password = body.password?.trim();
 
     if (!identifier || !password) {
       return NextResponse.json(
